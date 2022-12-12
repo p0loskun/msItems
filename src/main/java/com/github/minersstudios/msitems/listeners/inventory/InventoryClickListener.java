@@ -7,6 +7,7 @@ import com.github.minersstudios.msitems.items.Wearable;
 import com.github.minersstudios.msitems.utils.ChatUtils;
 import com.github.minersstudios.msitems.utils.ItemUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,6 +22,8 @@ import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+
+import static com.github.minersstudios.msitems.items.RenameableItem.Menu.*;
 
 public class InventoryClickListener implements Listener {
 
@@ -76,11 +79,11 @@ public class InventoryClickListener implements Listener {
 				ItemStack firstItem = clickedInventory.getItem(0);
 				if (firstItem != null && !clickType.isCreativeAction()) {
 					int firstItemIndex = RenameableItem.Menu.getItemIndex(firstItem);
-					if (slot >= 36 && slot <= 39 && firstItemIndex - 35 >= 0) {
+					if (previousPageButtonSlot.contains(slot) && firstItemIndex - 35 >= 0) {
 						player.openInventory(RenameableItem.Menu.getInventory(firstItemIndex - 36));
-					} else if (slot == 40) {
+					} else if (slot == quitRenamesButtonSlot) {
 						player.closeInventory();
-					} else if (slot >= 41 && slot <= 44 && firstItemIndex + 36 < RenameableItem.Menu.values.length) {
+					} else if (nextPageButtonSlot.contains(slot) && firstItemIndex + 36 < RenameableItem.Menu.values.length) {
 						player.openInventory(RenameableItem.Menu.getInventory(firstItemIndex + 36));
 					} else if (currentItem != null) {
 						RenameableItem.Menu.openRename(player, currentItem, firstItemIndex);
@@ -91,30 +94,32 @@ public class InventoryClickListener implements Listener {
 			}
 
 			if (inventoryTitle.equalsIgnoreCase(RenameableItem.Menu.RENAME_SELECTION_NAME)) {
-				ItemStack arrow = clickedInventory.getItem(4);
+				ItemStack arrow = clickedInventory.getItem(arrowSlot);
 				if (arrow != null && arrow.getItemMeta() != null) {
-					ItemStack item = clickedInventory.getItem(21);
-					if (slot == 31) {
+					ItemStack item = clickedInventory.getItem(currentRenameableItemSlot);
+					boolean hasExp = player.getLevel() >= 1 || player.getGameMode() == GameMode.CREATIVE;
+					if (slot == quitRenameButtonSlot) {
 						player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
 						player.openInventory(RenameableItem.Menu.getInventory(arrow.getItemMeta().getCustomModelData() - 1));
-					} else if (slot == 21) {
-						ItemStack secondItem = clickedInventory.getItem(6);
-						if (secondItem != null) {
-							String renameText = ChatUtils.convertPlainComponentToString(Objects.requireNonNull(secondItem.getItemMeta().displayName()));
-							Bukkit.getScheduler().runTask(Main.getInstance(), () ->
-									this.craftRenamedItem(event.getCurrentItem(), clickedInventory, renameText)
-							);
-						}
+					} else if (slot == currentRenameableItemSlot) {
+						ItemStack secondItem = clickedInventory.getItem(renamedItemSlot);
+						assert secondItem != null;
+						String renameText = ChatUtils.convertPlainComponentToString(Objects.requireNonNull(secondItem.getItemMeta().displayName()));
+						Bukkit.getScheduler().runTask(Main.getInstance(), () ->
+								this.craftRenamedItem(event.getCurrentItem(), clickedInventory, renameText, hasExp)
+						);
 						return;
 					} else if (
-							slot == 23
+							slot == currentRenamedItemSlot
 							&& item != null
 							&& cursorItem != null
 							&& cursorItem.getType().isAir()
+							&& hasExp
 					) {
-						player.setItemOnCursor(clickedInventory.getItem(23));
-						clickedInventory.setItem(21, null);
-						clickedInventory.setItem(23, null);
+						player.setItemOnCursor(clickedInventory.getItem(currentRenamedItemSlot));
+						clickedInventory.setItem(currentRenameableItemSlot, null);
+						clickedInventory.setItem(currentRenamedItemSlot, null);
+						player.giveExpLevels(-1);
 					}
 				}
 				event.setCancelled(!clickType.isCreativeAction());
@@ -122,17 +127,27 @@ public class InventoryClickListener implements Listener {
 		}
 	}
 
-	private void craftRenamedItem(ItemStack itemStack, Inventory inventory, String renameText) {
+	private void craftRenamedItem(ItemStack itemStack, Inventory inventory, String renameText, boolean hasExp) {
 		if (ItemUtils.getCustomItem(itemStack) instanceof Renameable renameable) {
-			inventory.setItem(23, renameable.createRenamedItem(itemStack, renameText));
+			inventory.setItem(currentRenamedItemSlot, renameable.createRenamedItem(itemStack, renameText));
+			if (!hasExp) {
+				inventory.setItem(redCrossSlot, getRedCross());
+			}
 			return;
 		} else {
 			RenameableItem renameableItem = ItemUtils.getRenameableItem(itemStack, renameText);
 			if (renameableItem != null) {
-				inventory.setItem(23, renameableItem.createRenamedItem(itemStack, renameText));
+				inventory.setItem(currentRenamedItemSlot, renameableItem.createRenamedItem(itemStack, renameText));
+				if (!hasExp) {
+					inventory.setItem(redCrossSlot, getRedCross());
+				}
 				return;
 			}
 		}
-		inventory.setItem(23, null);
+		inventory.setItem(currentRenamedItemSlot, null);
+		ItemStack redCross = inventory.getItem(redCrossSlot);
+		if (redCross != null) {
+			inventory.setItem(redCrossSlot, null);
+		}
 	}
 }

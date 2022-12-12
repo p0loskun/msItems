@@ -1,6 +1,7 @@
 package com.github.minersstudios.msitems.utils;
 
 import com.github.minersstudios.msitems.Main;
+import com.google.common.collect.Lists;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.Style;
@@ -8,12 +9,14 @@ import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,6 +34,9 @@ public final class ChatUtils {
 			TextDecoration.STRIKETHROUGH.withState(false),
 			TextDecoration.UNDERLINED.withState(false)
 	);
+
+	public static final List<String> PAINTABLE_LORE = Lists.newArrayList(ChatColor.WHITE + "ꀢ");
+	public static final List<Component> PAINTABLE_LORE_COMPONENT = Lists.newArrayList(createDefaultStyledName("ꀢ"));
 
 	/**
 	 * Sends info message to target

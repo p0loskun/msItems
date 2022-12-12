@@ -23,6 +23,7 @@ public class BanSwordMechanic implements Listener {
 				|| !damager.isOp()
 				|| !(ItemUtils.getCustomItem(damager.getActiveItem()) instanceof BanSword)
 		) return;
+		event.setCancelled(true);
 		damaged.banPlayer("Вы были поражены великим Бан-Мечём", damager.getName());
 	}
 

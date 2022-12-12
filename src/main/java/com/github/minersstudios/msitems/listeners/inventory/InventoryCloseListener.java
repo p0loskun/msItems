@@ -17,7 +17,7 @@ public class InventoryCloseListener implements Listener {
 	@EventHandler
 	public void onInventoryClose(@NotNull InventoryCloseEvent event) {
 		if (ChatUtils.convertComponentToString(event.getView().title()).equalsIgnoreCase(RenameableItem.Menu.RENAME_SELECTION_NAME)) {
-			ItemStack itemStack = event.getInventory().getItem(21);
+			ItemStack itemStack = event.getInventory().getItem(RenameableItem.Menu.currentRenameableItemSlot);
 			if (itemStack != null) {
 				HumanEntity player = event.getPlayer();
 				PlayerInventory playerInventory = player.getInventory();

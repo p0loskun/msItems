@@ -33,6 +33,7 @@ public class LeatherHat implements Renameable, Wearable {
 		ItemMeta itemMeta = this.itemStack.getItemMeta();
 		itemMeta.displayName(ChatUtils.createDefaultStyledName("Кожаная шляпа"));
 		itemMeta.setCustomModelData(999);
+		itemMeta.lore(ChatUtils.PAINTABLE_LORE_COMPONENT);
 		itemMeta.addAttributeModifier(
 				Attribute.GENERIC_ARMOR,
 				new AttributeModifier(UUID.randomUUID(), "armor", 1.0f, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HEAD)
@@ -94,37 +95,37 @@ public class LeatherHat implements Renameable, Wearable {
 
 	public enum Item implements Renameable.Item {
 		//<editor-fold desc="Hats">
-		LEATHER_HAT(999, "Кожаная шляпа"),
+		LEATHER_HAT(999, "Кожаная шляпа", ChatUtils.PAINTABLE_LORE),
 		THREED_GLASSES(1211, "3Д Очки"),
 		NECTAR_BEE(1213, "Пчела с пыльцой"),
 		BEE(1212, "Пчела"),
 		ANGRY_NECTAR_BEE(1215, "Злая пчела с пыльцой"),
 		ANGRY_BEE(1214, "Злая пчела"),
 		PHANTOM(1216, "Фантом"),
-		BERET(1217, "Берет"),
-		CAP(1218, "Кепка"),
-		CARDBOARD_CROWN(1219, "Корона из картона"),
-		CHEF_HAT(1220, "Колпак шефа"),
-		POVAR_HAT(1221, "Колпак повара"),
+		BERET(1217, "Берет", ChatUtils.PAINTABLE_LORE),
+		CAP(1218, "Кепка", ChatUtils.PAINTABLE_LORE),
+		CARDBOARD_CROWN(1219, "Корона из картона", ChatUtils.PAINTABLE_LORE),
+		CHEF_HAT(1220, "Колпак шефа", ChatUtils.PAINTABLE_LORE),
+		POVAR_HAT(1221, "Колпак повара", ChatUtils.PAINTABLE_LORE),
 		ENCHANTER_HAT(1222, "Чародейная шапка"),
 		GOAT_HEAD(1223, "Козья голова"),
 		MEDICINE_MASK(1224, "Медицинская маска"),
-		NEADER_MASK(1225, "Маска неандертальца"),
-		NEADER_MASK_O(1226, "Орущая маска неандертальца"),
-		NEADER_MASK_LEAVES(1227, "Маска с листьями неандертальца"),
-		NEADER_MASK_LEAVES_O(1228, "Орущая маска с листьями неандертальца"),
-		GOLDEN_PROTHESIS_LEFT(1229, "Левый золотой глазной протез"),
-		GOLDEN_PROTHESIS_RIGHT(1230, "Правый золотой глазной протез"),
-		SILVER_PROTHESIS_LEFT(1231, "Левый серебряный глазной протез"),
-		SILVER_PROTHESIS_RIGHT(1232, "Правый серебряный глазной протез"),
+		NEADER_MASK(1225, "Маска неандертальца", ChatUtils.PAINTABLE_LORE),
+		NEADER_MASK_O(1226, "Орущая маска неандертальца", ChatUtils.PAINTABLE_LORE),
+		NEADER_MASK_LEAVES(1227, "Маска с листьями неандертальца", ChatUtils.PAINTABLE_LORE),
+		NEADER_MASK_LEAVES_O(1228, "Орущая маска с листьями неандертальца", ChatUtils.PAINTABLE_LORE),
+		GOLDEN_PROTHESIS_LEFT(1229, "Левый золотой глазной протез", ChatUtils.PAINTABLE_LORE),
+		GOLDEN_PROTHESIS_RIGHT(1230, "Правый золотой глазной протез", ChatUtils.PAINTABLE_LORE),
+		SILVER_PROTHESIS_LEFT(1231, "Левый серебряный глазной протез", ChatUtils.PAINTABLE_LORE),
+		SILVER_PROTHESIS_RIGHT(1232, "Правый серебряный глазной протез", ChatUtils.PAINTABLE_LORE),
 		RACOON_HAT(1233, "Шапка из енота"),
 		SAMURAI(1234, "Кабуто"),
 		SAMURAI_MASK(1235, "Кабуто с маской"),
 		SCULK(1236, "Усики вардена"),
-		SUN_HAT(1237, "Соломенная шляпа"),
-		WAITER_CAP(1238, "Официантская шапочка"),
+		SUN_HAT(1237, "Соломенная шляпа", ChatUtils.PAINTABLE_LORE),
+		WAITER_CAP(1238, "Официантская шапочка", ChatUtils.PAINTABLE_LORE),
 		WESTERN_HAT(1239, "Ковбойская шляпа"),
-		WOLF_HEAD(1240, "Волчья голова"),
+		WOLF_HEAD(1240, "Волчья голова", ChatUtils.PAINTABLE_LORE),
 		//<editor-fold desc="Villager hats">
 		ARMORER_HAT(1241, "Очки бронника"),
 		BUTCHER_HAT(1242, "Повязка мясника"),
@@ -166,6 +167,14 @@ public class LeatherHat implements Renameable, Wearable {
 				@NotNull String renameText
 		) {
 			this(customModelData, renameText, null, true);
+		}
+
+		Item(
+				int customModelData,
+				@NotNull String renameText,
+				@Nullable List<String> lore
+		) {
+			this(customModelData, renameText, lore, true);
 		}
 
 		@Override

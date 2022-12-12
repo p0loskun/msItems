@@ -3,9 +3,10 @@ package com.github.minersstudios.msitems.utils;
 import com.github.minersstudios.msitems.Main;
 import com.github.minersstudios.msitems.items.RenameableItem;
 import net.kyori.adventure.text.Component;
-import org.bukkit.*;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 

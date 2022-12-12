@@ -21,8 +21,7 @@ public interface CustomItem {
 
 	void setItemStack(@NotNull ItemStack itemStack);
 
-	@Nullable
-	default Recipe getRecipe() {
+	default @Nullable Recipe getRecipe() {
 		return null;
 	}
 

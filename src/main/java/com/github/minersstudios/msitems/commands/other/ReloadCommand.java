@@ -1,6 +1,7 @@
 package com.github.minersstudios.msitems.commands.other;
 
 import com.github.minersstudios.msitems.Main;
+import com.github.minersstudios.msitems.items.RenameableItem;
 import com.github.minersstudios.msitems.utils.ChatUtils;
 import com.github.minersstudios.msitems.utils.ItemUtils;
 import net.kyori.adventure.text.Component;
@@ -29,6 +30,7 @@ public class ReloadCommand {
 			}
 		}
 		Main.getInstance().load();
+		RenameableItem.Menu.values = ItemUtils.RENAMEABLE_ITEMS_MENU.toArray(new RenameableItem[0]);
 		if (Main.getInstance().isEnabled()) {
 			return ChatUtils.sendFine(sender, Component.text("Плагин был успешно перезагружён за " + (System.currentTimeMillis() - time) + "ms"));
 		}

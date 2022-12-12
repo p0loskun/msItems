@@ -49,6 +49,8 @@ public interface Renameable extends CustomItem {
 						loreComponentList.add(Component.text(text));
 					}
 					itemMeta.lore(loreComponentList);
+				} else {
+					itemMeta.lore(null);
 				}
 				newItemStack.setItemMeta(itemMeta);
 				return newItemStack;
