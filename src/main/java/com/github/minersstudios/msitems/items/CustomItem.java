@@ -2,6 +2,8 @@ package com.github.minersstudios.msitems.items;
 
 import com.github.minersstudios.msitems.Main;
 import com.github.minersstudios.msitems.utils.ItemUtils;
+import com.google.common.collect.Lists;
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -35,6 +37,7 @@ public interface CustomItem {
 
 	default void register() {
 		ItemUtils.CUSTOM_ITEMS.put(this.getNamespacedKey().getKey(), this);
+		Bukkit.addRecipe(this.getRecipe());
 		if (this instanceof Renameable renameable) {
 			for (Renameable.Item item : renameable.getRenameableItems()) {
 				ItemStack itemStack = renameable.createRenamedItem(renameable.getItemStack(), item.getRenameText());
@@ -42,7 +45,7 @@ public interface CustomItem {
 					RenameableItem renameableItem = new RenameableItem(
 							new NamespacedKey(Main.getInstance(), this.getNamespacedKey().getKey() + "." + item.getKey()),
 							item.getRenameText(),
-							getItemStack(),
+							Lists.newArrayList(getItemStack()),
 							itemStack,
 							item.isShowInRenameMenu()
 					);

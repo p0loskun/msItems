@@ -1,5 +1,6 @@
 package com.github.minersstudios.msitems.items;
 
+import com.github.minersstudios.msitems.Main;
 import com.github.minersstudios.msitems.utils.ChatUtils;
 import com.github.minersstudios.msitems.utils.ItemUtils;
 import com.google.common.collect.Lists;
@@ -12,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,24 +22,23 @@ import java.util.List;
 
 @SuppressWarnings("unused")
 public class RenameableItem {
-	@NotNull private NamespacedKey namespacedKey;
-	@NotNull private String renameText;
-
-	@NotNull private ItemStack renameableItemStack;
-	@NotNull private ItemStack resultItemStack;
+	private @NotNull NamespacedKey namespacedKey;
+	private @NotNull String renameText;
+	private List<ItemStack> renameableItemStacks;
+	private @NotNull ItemStack resultItemStack;
 	private boolean showInRenameMenu;
 
 	public RenameableItem(
 			@NotNull NamespacedKey namespacedKey,
 			@NotNull String renameText,
-			@NotNull ItemStack renameableItemStack,
+			@NotNull List<ItemStack> renameableItemStacks,
 			@NotNull ItemStack resultItemStack,
 			boolean showInRenameMenu
 	) {
 		this.namespacedKey = namespacedKey;
 		this.renameText = renameText;
 		this.showInRenameMenu = showInRenameMenu;
-		this.renameableItemStack = renameableItemStack;
+		this.renameableItemStacks = renameableItemStacks;
 		this.resultItemStack = resultItemStack;
 		ItemMeta itemMeta = this.resultItemStack.getItemMeta();
 		itemMeta.displayName(ChatUtils.createDefaultStyledName(renameText));
@@ -51,8 +52,10 @@ public class RenameableItem {
 	public @Nullable ItemStack createRenamedItem(@Nullable ItemStack itemStack, @Nullable String renameText) {
 		if (renameText == null || itemStack == null) return null;
 		ItemStack newItemStack = itemStack.clone();
-		ItemMeta itemMeta = this.resultItemStack.getItemMeta();
+		ItemMeta itemMeta = newItemStack.getItemMeta();
 		itemMeta.displayName(ChatUtils.createDefaultStyledName(renameText));
+		itemMeta.lore(this.resultItemStack.lore());
+		itemMeta.setCustomModelData(this.resultItemStack.getItemMeta().getCustomModelData());
 		newItemStack.setItemMeta(itemMeta);
 		return newItemStack;
 	}
@@ -81,12 +84,12 @@ public class RenameableItem {
 		this.showInRenameMenu = showInRenameMenu;
 	}
 
-	public @NotNull ItemStack getRenameableItemStack() {
-		return this.renameableItemStack;
+	public @NotNull List<ItemStack> getRenameableItemStacks() {
+		return this.renameableItemStacks;
 	}
 
-	public void setRenameableItemStack(@NotNull ItemStack renameableItemStack) {
-		this.renameableItemStack = renameableItemStack;
+	public void setRenameableItemStacks(@NotNull List<ItemStack> renameableItemStack) {
+		this.renameableItemStacks = renameableItemStack;
 	}
 
 	public @NotNull ItemStack getResultItemStack() {
@@ -98,9 +101,9 @@ public class RenameableItem {
 	}
 
 	public static class Menu {
-		public static final String
-				MENU_NAME = ChatColor.WHITE + "뀂ꀰ",
-				RENAME_SELECTION_NAME = ChatColor.WHITE + "뀃ꀱ";
+		public static final Component
+				MENU_NAME = ChatUtils.createDefaultStyledName("뀂ꀰ"),
+				RENAME_SELECTION_NAME = ChatUtils.createDefaultStyledName("뀃ꀱ");
 		public static RenameableItem[] values = ItemUtils.RENAMEABLE_ITEMS_MENU.toArray(new RenameableItem[0]);
 		public static final int
 				arrowSlot = 4,
@@ -129,8 +132,25 @@ public class RenameableItem {
 		public static void openRename(@NotNull Player player, @NotNull ItemStack itemStack, int pageIndex) {
 			for (RenameableItem renameableItem : values) {
 				if (itemStack.isSimilar(renameableItem.resultItemStack)) {
-					Inventory inventory = Bukkit.createInventory(null, 5 * 9, Component.text(RENAME_SELECTION_NAME));
-					inventory.setItem(renameableItemSlot, renameableItem.renameableItemStack);
+					Inventory inventory = Bukkit.createInventory(null, 5 * 9, RENAME_SELECTION_NAME);
+					List<ItemStack> renameableItemStacks = renameableItem.renameableItemStacks;
+					if (renameableItemStacks.size() == 1) {
+						inventory.setItem(renameableItemSlot, renameableItemStacks.get(0));
+					} else {
+						new BukkitRunnable() {
+							int index = 0;
+
+							@Override
+							public void run() {
+								if (!player.getOpenInventory().title().contains(RENAME_SELECTION_NAME)) this.cancel();
+								inventory.setItem(renameableItemSlot, renameableItemStacks.get(this.index));
+								this.index++;
+								if (this.index + 1 > renameableItemStacks.size()) {
+									this.index = 0;
+								}
+							}
+						}.runTaskTimer(Main.getInstance(), 0L, 10L);
+					}
 					inventory.setItem(arrowSlot, getArrow(pageIndex));
 					inventory.setItem(renamedItemSlot, itemStack);
 					inventory.setItem(quitRenameButtonSlot, getQuitButton());
@@ -144,7 +164,7 @@ public class RenameableItem {
 		 */
 		@Contract("_ -> new")
 		public static @NotNull Inventory getInventory(int index) {
-			Inventory inventory = Bukkit.createInventory(null, 5 * 9, Component.text(MENU_NAME));
+			Inventory inventory = Bukkit.createInventory(null, 5 * 9, MENU_NAME);
 			inventory.setItem(previousPageButtonSlot.get(0), getPreviousPageButton()[index == 0 ? 1 : 0]);
 			inventory.setItem(previousPageButtonSlot.get(1), getPreviousPageButton()[1]);
 			inventory.setItem(previousPageButtonSlot.get(2), getPreviousPageButton()[1]);

@@ -6,6 +6,7 @@ import com.github.minersstudios.msitems.items.RenameableItem;
 import com.github.minersstudios.msitems.items.Wearable;
 import com.github.minersstudios.msitems.utils.ChatUtils;
 import com.github.minersstudios.msitems.utils.ItemUtils;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
@@ -33,7 +34,7 @@ public class InventoryClickListener implements Listener {
 		Player player = (Player) event.getWhoClicked();
 		PlayerInventory inventory = player.getInventory();
 		Inventory clickedInventory = event.getClickedInventory();
-		String inventoryTitle = ChatUtils.convertComponentToString(event.getView().title());
+		Component inventoryTitle = event.getView().title();
 		ItemStack cursorItem = event.getCursor(),
 				currentItem = event.getCurrentItem();
 		int slot = event.getSlot();
@@ -68,14 +69,14 @@ public class InventoryClickListener implements Listener {
 		if (
 				(clickedInventory.getType() == InventoryType.PLAYER
 				&& (clickType.isShiftClick() || clickType == ClickType.DOUBLE_CLICK)
-				&& (inventoryTitle.equalsIgnoreCase(RenameableItem.Menu.RENAME_SELECTION_NAME)
-				|| inventoryTitle.equalsIgnoreCase(RenameableItem.Menu.MENU_NAME)))
+				&& (inventoryTitle.contains(RenameableItem.Menu.RENAME_SELECTION_NAME)
+				|| inventoryTitle.contains(RenameableItem.Menu.MENU_NAME)))
 		) {
 			event.setCancelled(true);
 		}
 
 		if (clickedInventory.getType() != InventoryType.PLAYER) {
-			if (inventoryTitle.equalsIgnoreCase(RenameableItem.Menu.MENU_NAME)) {
+			if (inventoryTitle.contains(RenameableItem.Menu.MENU_NAME)) {
 				ItemStack firstItem = clickedInventory.getItem(0);
 				if (firstItem != null && !clickType.isCreativeAction()) {
 					int firstItemIndex = RenameableItem.Menu.getItemIndex(firstItem);
@@ -93,7 +94,7 @@ public class InventoryClickListener implements Listener {
 				event.setCancelled(!clickType.isCreativeAction());
 			}
 
-			if (inventoryTitle.equalsIgnoreCase(RenameableItem.Menu.RENAME_SELECTION_NAME)) {
+			if (inventoryTitle.contains(RenameableItem.Menu.RENAME_SELECTION_NAME)) {
 				ItemStack arrow = clickedInventory.getItem(arrowSlot);
 				if (arrow != null && arrow.getItemMeta() != null) {
 					ItemStack item = clickedInventory.getItem(currentRenameableItemSlot);
@@ -111,12 +112,13 @@ public class InventoryClickListener implements Listener {
 						return;
 					} else if (
 							slot == currentRenamedItemSlot
+							&& currentItem != null
 							&& item != null
 							&& cursorItem != null
 							&& cursorItem.getType().isAir()
 							&& hasExp
 					) {
-						player.setItemOnCursor(clickedInventory.getItem(currentRenamedItemSlot));
+						player.setItemOnCursor(currentItem);
 						clickedInventory.setItem(currentRenameableItemSlot, null);
 						clickedInventory.setItem(currentRenamedItemSlot, null);
 						player.giveExpLevels(-1);

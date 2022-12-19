@@ -45,11 +45,13 @@ public final class ItemUtils {
 				|| renameText == null
 		) return null;
 		for (RenameableItem renameableItem : RENAMEABLE_ITEMS.values()) {
-			if (
-					renameableItem.getResultItemStack().getType() == itemStack.getType()
-					&& StringUtils.startsWithIgnoreCase(renameText, renameableItem.getRenameText())
-			) {
-				return renameableItem;
+			for (ItemStack renameableItemStack : renameableItem.getRenameableItemStacks()) {
+				if (
+						renameableItemStack.getType() == itemStack.getType()
+						&& StringUtils.startsWithIgnoreCase(renameText, renameableItem.getRenameText())
+				) {
+					return renameableItem;
+				}
 			}
 		}
 		return null;

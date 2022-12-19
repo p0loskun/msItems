@@ -29,9 +29,20 @@ public final class ConfigCache {
 						String fileName = file.getName();
 						if (fileName.equalsIgnoreCase("example.yml")) return;
 						YamlConfiguration renameableItemConfig = YamlConfiguration.loadConfiguration(file);
-						Material material = Material.valueOf(renameableItemConfig.getString("material"));
-						ItemStack itemStack = new ItemStack(material);
-						ItemMeta itemMeta = itemStack.getItemMeta();
+						List<String> materialsString = renameableItemConfig.getStringList("material");
+						if (materialsString.isEmpty()) {
+							materialsString.add(renameableItemConfig.getString("material"));
+						}
+						List<Material> materials = new ArrayList<>();
+						for (String material : materialsString) {
+							materials.add(Material.valueOf(material));
+						}
+						List<ItemStack> renameableItemStacks = new ArrayList<>();
+						for (Material material : materials) {
+							renameableItemStacks.add(new ItemStack(material));
+						}
+						ItemStack resultItemStack = new ItemStack(materials.get(0));
+						ItemMeta itemMeta = resultItemStack.getItemMeta();
 						List<String> lore = renameableItemConfig.getStringList("lore");
 						if (!lore.isEmpty()) {
 							List<Component> loreComponentList = new ArrayList<>();
@@ -41,12 +52,12 @@ public final class ConfigCache {
 							itemMeta.lore(loreComponentList);
 						}
 						itemMeta.setCustomModelData(renameableItemConfig.getInt("custom-model-data"));
-						itemStack.setItemMeta(itemMeta);
+						resultItemStack.setItemMeta(itemMeta);
 						RenameableItem renameableItem = new RenameableItem(
 								new NamespacedKey(Main.getInstance(), Objects.requireNonNull(renameableItemConfig.getString("namespaced-key"), fileName + " namespaced-key must be NotNull!")),
 								Objects.requireNonNull(renameableItemConfig.getString("rename-text"), fileName + " rename-text must be NotNull!"),
-								new ItemStack(material),
-								itemStack,
+								renameableItemStacks,
+								resultItemStack,
 								renameableItemConfig.getBoolean("show-in-rename-menu")
 						);
 						ItemUtils.RENAMEABLE_ITEMS.put(renameableItem.getNamespacedKey().getKey(), renameableItem);

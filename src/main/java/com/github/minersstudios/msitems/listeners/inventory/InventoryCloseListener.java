@@ -1,7 +1,6 @@
 package com.github.minersstudios.msitems.listeners.inventory;
 
 import com.github.minersstudios.msitems.items.RenameableItem;
-import com.github.minersstudios.msitems.utils.ChatUtils;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,7 +15,7 @@ public class InventoryCloseListener implements Listener {
 
 	@EventHandler
 	public void onInventoryClose(@NotNull InventoryCloseEvent event) {
-		if (ChatUtils.convertComponentToString(event.getView().title()).equalsIgnoreCase(RenameableItem.Menu.RENAME_SELECTION_NAME)) {
+		if (event.getView().title().contains(RenameableItem.Menu.RENAME_SELECTION_NAME)) {
 			ItemStack itemStack = event.getInventory().getItem(RenameableItem.Menu.currentRenameableItemSlot);
 			if (itemStack != null) {
 				HumanEntity player = event.getPlayer();

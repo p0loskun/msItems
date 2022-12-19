@@ -1,22 +1,21 @@
 package com.github.minersstudios.msitems.listeners.inventory;
 
 import com.github.minersstudios.msitems.items.RenameableItem;
-import com.github.minersstudios.msitems.utils.ChatUtils;
+import net.kyori.adventure.text.Component;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class InventoryDragListener implements Listener {
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onInventoryDrag(@NotNull InventoryDragEvent event) {
-		String inventoryTitle = ChatUtils.convertComponentToString(event.getView().title());
-		if (
-				inventoryTitle.equalsIgnoreCase(RenameableItem.Menu.MENU_NAME)
-				|| inventoryTitle.equalsIgnoreCase(RenameableItem.Menu.RENAME_SELECTION_NAME)
-		) {
-			event.setCancelled(true);
-		}
+		Component inventoryTitle = event.getView().title();
+		event.setCancelled(
+				inventoryTitle.contains(RenameableItem.Menu.MENU_NAME)
+				|| inventoryTitle.contains(RenameableItem.Menu.RENAME_SELECTION_NAME)
+		);
 	}
 }

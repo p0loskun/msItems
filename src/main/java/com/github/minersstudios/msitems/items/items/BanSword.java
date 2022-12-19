@@ -17,8 +17,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 
 public class BanSword implements CustomItem {
-	@NotNull private NamespacedKey namespacedKey;
-	@NotNull private ItemStack itemStack;
+	private @NotNull NamespacedKey namespacedKey;
+	private @NotNull ItemStack itemStack;
 
 	public BanSword() {
 		this.namespacedKey = new NamespacedKey(Main.getInstance(), "ban_sword");

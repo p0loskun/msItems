@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface Renameable extends CustomItem {
 
-	Item[] getRenameableItems();
+	Item @NotNull [] getRenameableItems();
 
 	@NotNull
 	ItemStack getItemStack();

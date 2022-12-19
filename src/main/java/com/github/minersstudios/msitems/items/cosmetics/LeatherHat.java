@@ -4,7 +4,6 @@ import com.github.minersstudios.msitems.Main;
 import com.github.minersstudios.msitems.items.Renameable;
 import com.github.minersstudios.msitems.items.Wearable;
 import com.github.minersstudios.msitems.utils.ChatUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -22,9 +21,9 @@ import java.util.Locale;
 import java.util.UUID;
 
 public class LeatherHat implements Renameable, Wearable {
-	@NotNull private NamespacedKey namespacedKey;
-	@NotNull private ItemStack itemStack;
-	@Nullable private Recipe recipe;
+	private @NotNull NamespacedKey namespacedKey;
+	private @NotNull ItemStack itemStack;
+	private @Nullable Recipe recipe;
 	private boolean showInCraftsMenu;
 
 	public LeatherHat() {
@@ -45,7 +44,6 @@ public class LeatherHat implements Renameable, Wearable {
 						"LLL"
 				).setIngredient('L', Material.LEATHER);
 		this.showInCraftsMenu = true;
-		Bukkit.addRecipe(this.recipe);
 	}
 
 	@Override
@@ -89,7 +87,7 @@ public class LeatherHat implements Renameable, Wearable {
 	}
 
 	@Override
-	public Item[] getRenameableItems() {
+	public Item @NotNull [] getRenameableItems() {
 		return Item.renameableItems;
 	}
 

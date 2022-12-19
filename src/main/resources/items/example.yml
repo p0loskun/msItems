@@ -4,6 +4,8 @@ lore:
   - "1"
   - "2"
   - "3"
-material: STICK
+material:
+  - STICK
+  - OAK_WOOD
 custom-model-data: 0
 show-in-rename-menu: false/true
