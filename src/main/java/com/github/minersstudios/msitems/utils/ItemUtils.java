@@ -4,7 +4,7 @@ import com.github.minersstudios.msitems.items.CustomItem;
 import com.github.minersstudios.msitems.items.RenameableItem;
 import com.github.minersstudios.msitems.items.cosmetics.LeatherHat;
 import com.github.minersstudios.msitems.items.items.BanSword;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;

@@ -3,7 +3,7 @@ package com.github.minersstudios.msitems.utils;
 import com.github.minersstudios.msitems.Main;
 import com.github.minersstudios.msitems.items.RenameableItem;
 import net.kyori.adventure.text.Component;
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -63,7 +63,7 @@ public final class ConfigCache {
 						ItemUtils.RENAMEABLE_ITEMS.put(renameableItem.getNamespacedKey().getKey(), renameableItem);
 					});
 		} catch (IOException e) {
-			Main.getInstance().getLogger().info(ExceptionUtils.getFullStackTrace(e));
+			Main.getInstance().getLogger().info(ExceptionUtils.getStackTrace(e));
 		}
 	}
 }
