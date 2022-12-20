@@ -174,9 +174,9 @@ public class RenameableItem {
 			inventory.setItem(nextPageButtonSlot.get(1), getNextPageButton()[1]);
 			inventory.setItem(nextPageButtonSlot.get(2), getNextPageButton()[1]);
 			inventory.setItem(nextPageButtonSlot.get(3), getNextPageButton()[1]);
-			for (int i = 0; i <= 35 && index < values.length; index++, i++) {
-				if (values[index].showInRenameMenu) {
-					inventory.setItem(i, values[index].resultItemStack);
+			for (int i = 0, page = index; i <= 35 && page < values.length; page++, i++) {
+				if (values[page].showInRenameMenu) {
+					inventory.setItem(i, values[page].resultItemStack);
 				}
 			}
 			return inventory;

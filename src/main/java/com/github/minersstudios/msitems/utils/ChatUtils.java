@@ -21,11 +21,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public final class ChatUtils {
-
-	private ChatUtils() {
-		throw new IllegalStateException("Utility class");
-	}
-
 	public static final Style DEFAULT_STYLE = Style.style(
 			NamedTextColor.WHITE,
 			TextDecoration.OBFUSCATED.withState(false),
@@ -34,9 +29,12 @@ public final class ChatUtils {
 			TextDecoration.STRIKETHROUGH.withState(false),
 			TextDecoration.UNDERLINED.withState(false)
 	);
-
 	public static final List<String> PAINTABLE_LORE = Lists.newArrayList(ChatColor.WHITE + "ꀢ");
 	public static final List<Component> PAINTABLE_LORE_COMPONENT = Lists.newArrayList(createDefaultStyledName("ꀢ"));
+
+	private ChatUtils() {
+		throw new IllegalStateException("Utility class");
+	}
 
 	/**
 	 * Sends info message to target

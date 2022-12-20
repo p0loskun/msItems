@@ -2,8 +2,8 @@ package com.github.minersstudios.msitems.commands;
 
 import com.github.minersstudios.msitems.Main;
 import com.github.minersstudios.msitems.commands.other.RenamesCommand;
-import com.github.minersstudios.msitems.tabCompleters.Empty;
-import com.github.minersstudios.msitems.tabCompleters.TabCommandHandler;
+import com.github.minersstudios.msitems.tabcompleters.Empty;
+import com.github.minersstudios.msitems.tabcompleters.TabCommandHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

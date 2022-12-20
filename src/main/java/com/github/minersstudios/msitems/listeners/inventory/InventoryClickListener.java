@@ -69,39 +69,39 @@ public class InventoryClickListener implements Listener {
 		if (
 				(clickedInventory.getType() == InventoryType.PLAYER
 				&& (clickType.isShiftClick() || clickType == ClickType.DOUBLE_CLICK)
-				&& (inventoryTitle.contains(RenameableItem.Menu.RENAME_SELECTION_NAME)
-				|| inventoryTitle.contains(RenameableItem.Menu.MENU_NAME)))
+				&& (inventoryTitle.contains(RENAME_SELECTION_NAME)
+				|| inventoryTitle.contains(MENU_NAME)))
 		) {
 			event.setCancelled(true);
 		}
 
 		if (clickedInventory.getType() != InventoryType.PLAYER) {
-			if (inventoryTitle.contains(RenameableItem.Menu.MENU_NAME)) {
+			if (inventoryTitle.contains(MENU_NAME)) {
 				ItemStack firstItem = clickedInventory.getItem(0);
 				if (firstItem != null && !clickType.isCreativeAction()) {
-					int firstItemIndex = RenameableItem.Menu.getItemIndex(firstItem);
+					int firstItemIndex = getItemIndex(firstItem);
 					if (previousPageButtonSlot.contains(slot) && firstItemIndex - 35 >= 0) {
-						player.openInventory(RenameableItem.Menu.getInventory(firstItemIndex - 36));
+						player.openInventory(getInventory(firstItemIndex - 36));
 					} else if (slot == quitRenamesButtonSlot) {
 						player.closeInventory();
-					} else if (nextPageButtonSlot.contains(slot) && firstItemIndex + 36 < RenameableItem.Menu.values.length) {
-						player.openInventory(RenameableItem.Menu.getInventory(firstItemIndex + 36));
+					} else if (nextPageButtonSlot.contains(slot) && firstItemIndex + 36 < values.length) {
+						player.openInventory(getInventory(firstItemIndex + 36));
 					} else if (currentItem != null) {
-						RenameableItem.Menu.openRename(player, currentItem, firstItemIndex);
+						openRename(player, currentItem, firstItemIndex);
 					}
 				}
 				player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
 				event.setCancelled(!clickType.isCreativeAction());
 			}
 
-			if (inventoryTitle.contains(RenameableItem.Menu.RENAME_SELECTION_NAME)) {
+			if (inventoryTitle.contains(RENAME_SELECTION_NAME)) {
 				ItemStack arrow = clickedInventory.getItem(arrowSlot);
 				if (arrow != null && arrow.getItemMeta() != null) {
 					ItemStack item = clickedInventory.getItem(currentRenameableItemSlot);
 					boolean hasExp = player.getLevel() >= 1 || player.getGameMode() == GameMode.CREATIVE;
 					if (slot == quitRenameButtonSlot) {
 						player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
-						player.openInventory(RenameableItem.Menu.getInventory(arrow.getItemMeta().getCustomModelData() - 1));
+						player.openInventory(getInventory(arrow.getItemMeta().getCustomModelData() - 1));
 					} else if (slot == currentRenameableItemSlot) {
 						ItemStack secondItem = clickedInventory.getItem(renamedItemSlot);
 						assert secondItem != null;

@@ -1,4 +1,4 @@
-package com.github.minersstudios.msitems.tabCompleters;
+package com.github.minersstudios.msitems.tabcompleters;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

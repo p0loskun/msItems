@@ -1,4 +1,4 @@
-package com.github.minersstudios.msitems.tabCompleters;
+package com.github.minersstudios.msitems.tabcompleters;
 
 import com.github.minersstudios.msitems.utils.ItemUtils;
 import org.bukkit.Bukkit;
@@ -29,6 +29,9 @@ public class TabCommandHandler implements TabCompleter {
 			case 3 -> {
 				completions.addAll(ItemUtils.CUSTOM_ITEMS.keySet());
 				completions.addAll(ItemUtils.RENAMEABLE_ITEMS.keySet());
+			}
+			default -> {
+				return completions;
 			}
 		}
 		return completions;
