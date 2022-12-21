@@ -38,6 +38,9 @@ public interface CustomItem {
 	default void register() {
 		ItemUtils.CUSTOM_ITEMS.put(this.getNamespacedKey().getKey(), this);
 		Bukkit.addRecipe(this.getRecipe());
+		if (isShowInCraftsMenu()) {
+			ItemUtils.CUSTOM_ITEM_RECIPES.add(getRecipe());
+		}
 		if (this instanceof Renameable renameable) {
 			for (Renameable.Item item : renameable.getRenameableItems()) {
 				ItemStack itemStack = renameable.createRenamedItem(renameable.getItemStack(), item.getRenameText());

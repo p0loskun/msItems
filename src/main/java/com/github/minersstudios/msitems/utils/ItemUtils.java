@@ -6,6 +6,7 @@ import com.github.minersstudios.msitems.items.cosmetics.LeatherHat;
 import com.github.minersstudios.msitems.items.items.BanSword;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,6 +19,7 @@ public final class ItemUtils {
 	public static final Map<String, CustomItem> CUSTOM_ITEMS = new HashMap<>();
 	public static final Map<String, RenameableItem> RENAMEABLE_ITEMS = new HashMap<>();
 	public static final List<RenameableItem> RENAMEABLE_ITEMS_MENU = new ArrayList<>();
+	public static final List<Recipe> CUSTOM_ITEM_RECIPES = new ArrayList<>();
 
 	private ItemUtils() {
 		throw new IllegalStateException("Utility class");
