@@ -26,6 +26,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -90,11 +91,18 @@ public class WrenchMechanic implements Listener {
 	private void use(@Nullable Entity entity, @NotNull Wrenchable wrenchable) {
 		Typed.Type type = wrenchable.getNextType(wrenchable.getType(wrenchable.getItemStack()));
 		if (type == null) return;
-		ItemStack itemStack = wrenchable.createItemStack(type);
+		int customModelData = wrenchable.createItemStack(type).getItemMeta().getCustomModelData();
 		if (entity instanceof ItemFrame itemFrame) {
+			ItemStack itemStack = itemFrame.getItem();
+			ItemMeta itemMeta = itemStack.getItemMeta();
+			itemMeta.setCustomModelData(customModelData);
+			itemStack.setItemMeta(itemMeta);
 			itemFrame.setItem(itemStack);
-			itemFrame.customName(itemStack.displayName());
 		} else if (entity instanceof ArmorStand armorStand) {
+			ItemStack itemStack = armorStand.getEquipment().getHelmet();
+			ItemMeta itemMeta = itemStack.getItemMeta();
+			itemMeta.setCustomModelData(customModelData);
+			itemStack.setItemMeta(itemMeta);
 			armorStand.getEquipment().setHelmet(itemStack);
 		}
 		if (
