@@ -13,6 +13,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,6 +24,14 @@ import java.util.logging.Logger;
 public final class ChatUtils {
 	public static final Style DEFAULT_STYLE = Style.style(
 			NamedTextColor.WHITE,
+			TextDecoration.OBFUSCATED.withState(false),
+			TextDecoration.BOLD.withState(false),
+			TextDecoration.ITALIC.withState(false),
+			TextDecoration.STRIKETHROUGH.withState(false),
+			TextDecoration.UNDERLINED.withState(false)
+	);
+
+	public static final Style COLORLESS_DEFAULT_STYLE = Style.style(
 			TextDecoration.OBFUSCATED.withState(false),
 			TextDecoration.BOLD.withState(false),
 			TextDecoration.ITALIC.withState(false),
@@ -114,14 +123,17 @@ public final class ChatUtils {
 		Logger.getLogger(Main.getInstance().getName()).log(level, message);
 	}
 
+	@Contract("_ -> new")
 	public static @NotNull Component createDefaultStyledName(@NotNull String name) {
 		return Component.text().append(Component.text(name).style(ChatUtils.DEFAULT_STYLE)).build();
 	}
 
+	@Contract("_ -> new")
 	public static @NotNull String convertComponentToString(@NotNull Component component) {
 		return LegacyComponentSerializer.builder().hexColors().useUnusualXRepeatedCharacterHexFormat().build().serialize(component);
 	}
 
+	@Contract("_ -> new")
 	public static @NotNull String convertPlainComponentToString(@NotNull Component component) {
 		return PlainTextComponentSerializer.plainText().serialize(component);
 	}

@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 public class PrepareAnvilListener implements Listener {
@@ -17,18 +18,26 @@ public class PrepareAnvilListener implements Listener {
 		AnvilInventory inventory = event.getInventory();
 		ItemStack firstItem = inventory.getFirstItem();
 		String renameText = inventory.getRenameText();
-		if (
-				inventory.getSecondItem() == null
-				&& ItemUtils.getCustomItem(firstItem) instanceof Renameable renameable
-		) {
+		if (ItemUtils.getCustomItem(firstItem) instanceof Renameable renameable) {
 			ItemStack renameableItem = renameable.createRenamedItem(firstItem, renameText);
 			if (renameableItem != null) {
-				event.setResult(renameableItem);
+				event.setResult(ItemUtils.combineDurability(renameableItem, inventory.getSecondItem()));
 			}
 		} else {
 			RenameableItem renameableItem = ItemUtils.getRenameableItem(firstItem, renameText);
 			if (renameableItem != null) {
-				event.setResult(renameableItem.createRenamedItem(firstItem, renameText));
+				ItemStack renamedItem = renameableItem.createRenamedItem(firstItem, renameText);
+				event.setResult(
+						renamedItem == null ? null
+						: ItemUtils.combineDurability(renamedItem, inventory.getSecondItem())
+				);
+			} else {
+				ItemStack itemStack = event.getResult();
+				if (itemStack == null) return;
+				ItemMeta itemMeta = itemStack.getItemMeta();
+				itemMeta.setCustomModelData(null);
+				itemStack.setItemMeta(itemMeta);
+				event.setResult(ItemUtils.combineDurability(itemStack, inventory.getSecondItem()));
 			}
 		}
 	}

@@ -4,10 +4,13 @@ import com.github.minersstudios.msitems.items.CustomItem;
 import com.github.minersstudios.msitems.items.RenameableItem;
 import com.github.minersstudios.msitems.items.cosmetics.LeatherHat;
 import com.github.minersstudios.msitems.items.items.BanSword;
+import com.github.minersstudios.msitems.items.items.Wrench;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.meta.Damageable;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -28,6 +31,7 @@ public final class ItemUtils {
 	public static void registerItems() {
 		new LeatherHat().register();
 		new BanSword().register();
+		new Wrench().register();
 	}
 
 	@Contract("null -> null")
@@ -57,5 +61,20 @@ public final class ItemUtils {
 			}
 		}
 		return null;
+	}
+
+	@Contract("_, null -> param1")
+	public static ItemStack combineDurability(@NotNull ItemStack firstItem, @Nullable ItemStack secondItem) {
+		if (secondItem == null) return firstItem;
+		ItemStack newItem = firstItem.clone();
+		if (
+				firstItem.getItemMeta() instanceof Damageable firstDamageable
+				&& secondItem.getItemMeta() instanceof Damageable secondDamageable
+		) {
+			firstDamageable.setDamage(secondDamageable.getDamage() - firstDamageable.getDamage());
+			newItem.setItemMeta(firstDamageable);
+			return newItem;
+		}
+		return newItem;
 	}
 }

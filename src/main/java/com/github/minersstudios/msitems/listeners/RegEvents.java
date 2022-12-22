@@ -6,6 +6,7 @@ import com.github.minersstudios.msitems.listeners.inventory.InventoryCloseListen
 import com.github.minersstudios.msitems.listeners.inventory.InventoryDragListener;
 import com.github.minersstudios.msitems.listeners.inventory.PrepareAnvilListener;
 import com.github.minersstudios.msitems.listeners.mechanic.BanSwordMechanic;
+import com.github.minersstudios.msitems.listeners.mechanic.WrenchMechanic;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
@@ -25,5 +26,6 @@ public final class RegEvents {
         pluginManager.registerEvents(new InventoryDragListener(), plugin);
 
         pluginManager.registerEvents(new BanSwordMechanic(), plugin);
+        pluginManager.registerEvents(new WrenchMechanic(), plugin);
     }
 }

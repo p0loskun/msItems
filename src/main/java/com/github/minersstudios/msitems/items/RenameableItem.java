@@ -233,6 +233,7 @@ public class RenameableItem {
 			return itemStack;
 		}
 
+		@Contract(" -> new")
 		public static @NotNull ItemStack getRedCross() {
 			ItemStack itemStack = new ItemStack(Material.PAPER);
 			ItemMeta itemMeta = itemStack.getItemMeta();

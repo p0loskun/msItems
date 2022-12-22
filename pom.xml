@@ -55,6 +55,10 @@
 
     <repositories>
         <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
             <id>papermc</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
@@ -75,6 +79,12 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.12.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.MinersStudios</groupId>
+            <artifactId>msDecor</artifactId>
+            <version>release-b66ae999ad-1</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

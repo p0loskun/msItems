@@ -13,9 +13,11 @@ public class InventoryDragListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onInventoryDrag(@NotNull InventoryDragEvent event) {
 		Component inventoryTitle = event.getView().title();
-		event.setCancelled(
+		if (
 				inventoryTitle.contains(RenameableItem.Menu.MENU_NAME)
 				|| inventoryTitle.contains(RenameableItem.Menu.RENAME_SELECTION_NAME)
-		);
+		) {
+			event.setCancelled(true);
+		}
 	}
 }
