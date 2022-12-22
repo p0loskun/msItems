@@ -24,7 +24,13 @@ public class BanSwordMechanic implements Listener {
 		) return;
 		event.setCancelled(true);
 		if (damager.isOp()) {
-			damaged.banPlayer("Вы были поражены великим Бан-Мечём", damager.getName());
+			try {
+				Bukkit.getScheduler().callSyncMethod(Main.getInstance(), () ->
+						Bukkit.dispatchCommand(damager, "ban " + damaged + " 9999999 Вы были поражены великим Бан-Мечём")
+				);
+			} catch (Exception exception) {
+				exception.printStackTrace();
+			}
 		}
 	}
 
