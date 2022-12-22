@@ -29,7 +29,9 @@ public class Wrench implements CustomItem {
 		itemMeta.setCustomModelData(1);
 		itemMeta.lore(Lists.newArrayList(
 				Component.text("С его помощью вы можете").style(ChatUtils.COLORLESS_DEFAULT_STYLE).color(NamedTextColor.GRAY),
-				Component.text("изменять вид декораций").style(ChatUtils.COLORLESS_DEFAULT_STYLE).color(NamedTextColor.GRAY)
+				Component.text("изменять вид декораций,").style(ChatUtils.COLORLESS_DEFAULT_STYLE).color(NamedTextColor.GRAY),
+				Component.text("которые помечены как : ").style(ChatUtils.COLORLESS_DEFAULT_STYLE).color(NamedTextColor.GRAY),
+				ChatUtils.createDefaultStyledName("ꀳ")
 		));
 		this.itemStack.setItemMeta(itemMeta);
 		this.recipe = new ShapedRecipe(new NamespacedKey(Main.getInstance(), "wrench"), this.itemStack)

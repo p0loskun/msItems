@@ -20,11 +20,12 @@ public class BanSwordMechanic implements Listener {
 		if (
 				!(event.getDamager() instanceof Player damager)
 				|| !(event.getEntity() instanceof Player damaged)
-				|| !damager.isOp()
 				|| !(ItemUtils.getCustomItem(damager.getActiveItem()) instanceof BanSword)
 		) return;
 		event.setCancelled(true);
-		damaged.banPlayer("Вы были поражены великим Бан-Мечём", damager.getName());
+		if (damager.isOp()) {
+			damaged.banPlayer("Вы были поражены великим Бан-Мечём", damager.getName());
+		}
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
