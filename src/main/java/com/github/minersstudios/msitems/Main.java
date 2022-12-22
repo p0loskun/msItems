@@ -26,11 +26,11 @@ public final class Main extends JavaPlugin {
     public void load() {
         instance = this;
 
+        ItemUtils.registerItems();
         reloadConfigs();
 
         RegEvents.init(this);
         RegCommands.init(this);
-        ItemUtils.registerItems();
     }
 
     public static void reloadConfigs() {

@@ -94,6 +94,7 @@ public class LeatherHat implements Renameable, Wearable {
 	public enum Item implements Renameable.Item {
 		//<editor-fold desc="Hats">
 		LEATHER_HAT(999, "Кожаная шляпа", ChatUtils.PAINTABLE_LORE),
+		SANTA_HAT(1258, "Колпак санты", ChatUtils.PAINTABLE_LORE),
 		THREED_GLASSES(1211, "3Д Очки"),
 		NECTAR_BEE(1213, "Пчела с пыльцой"),
 		BEE(1212, "Пчела"),
