@@ -21,6 +21,7 @@ public class ReloadCommand {
 		ItemUtils.CUSTOM_ITEMS.clear();
 		ItemUtils.RENAMEABLE_ITEMS.clear();
 		ItemUtils.RENAMEABLE_ITEMS_MENU.clear();
+		ItemUtils.CUSTOM_ITEM_RECIPES.clear();
 		HandlerList.unregisterAll(Main.getInstance());
 		Iterator<Recipe> crafts = Bukkit.recipeIterator();
 		while (crafts.hasNext()) {
