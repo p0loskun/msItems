@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("UnstableApiUsage")
 public class CardBoxMechanic implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)

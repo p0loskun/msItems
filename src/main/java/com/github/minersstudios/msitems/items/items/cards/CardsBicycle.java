@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Locale;
 
+@SuppressWarnings("UnstableApiUsage")
 public class CardsBicycle implements Typed {
 	private @NotNull NamespacedKey namespacedKey;
 	private @NotNull ItemStack itemStack;
@@ -291,7 +292,6 @@ public class CardsBicycle implements Typed {
 		private final int customModelData;
 		private final @NotNull Component itemName;
 		private final @NotNull ItemStack itemStack;
-		private final @NotNull List<ItemStack> cardItems;
 
 		Boxes(
 				int customModelData,
@@ -302,7 +302,6 @@ public class CardsBicycle implements Typed {
 			this.customModelData = customModelData;
 			this.itemName = itemName;
 			this.itemStack = new ItemStack(Material.BUNDLE);
-			this.cardItems = cardItems;
 			BundleMeta bundleMeta = (BundleMeta) this.itemStack.getItemMeta();
 			bundleMeta.displayName(itemName);
 			bundleMeta.setCustomModelData(customModelData);
@@ -327,10 +326,6 @@ public class CardsBicycle implements Typed {
 		@Override
 		public int getCustomModelData() {
 			return this.customModelData;
-		}
-
-		public @NotNull List<ItemStack> getCardItems() {
-			return this.cardItems;
 		}
 	}
 }
