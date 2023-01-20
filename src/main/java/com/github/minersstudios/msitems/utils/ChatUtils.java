@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,6 +27,15 @@ public final class ChatUtils {
 			NamedTextColor.WHITE,
 			TextDecoration.OBFUSCATED.withState(false),
 			TextDecoration.BOLD.withState(false),
+			TextDecoration.ITALIC.withState(false),
+			TextDecoration.STRIKETHROUGH.withState(false),
+			TextDecoration.UNDERLINED.withState(false)
+	);
+
+	public static final Style DEFAULT_STYLE_BOLD = Style.style(
+			NamedTextColor.WHITE,
+			TextDecoration.OBFUSCATED.withState(false),
+			TextDecoration.BOLD.withState(true),
 			TextDecoration.ITALIC.withState(false),
 			TextDecoration.STRIKETHROUGH.withState(false),
 			TextDecoration.UNDERLINED.withState(false)
@@ -138,6 +148,17 @@ public final class ChatUtils {
 		return PlainTextComponentSerializer.plainText().serialize(component);
 	}
 
+	public static @Nullable List<Component> convertStringsToComponents(@Nullable Style style, String @NotNull ... strings) {
+		List<Component> components = new ArrayList<>();
+		for (String string : strings) {
+			Component component = Component.text(string);
+			components.add(
+					style == null ? component
+					: component.style(style)
+			);
+		}
+		return components.isEmpty() ? null : components;
+	}
 
 	public static class Symbols {
 		public static final Component

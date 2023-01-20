@@ -1,5 +1,7 @@
 package com.github.minersstudios.msitems.tabcompleters;
 
+import com.github.minersstudios.msitems.items.CustomItem;
+import com.github.minersstudios.msitems.items.Typed;
 import com.github.minersstudios.msitems.utils.ItemUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -29,6 +31,14 @@ public class TabCommandHandler implements TabCompleter {
 			case 3 -> {
 				completions.addAll(ItemUtils.CUSTOM_ITEMS.keySet());
 				completions.addAll(ItemUtils.RENAMEABLE_ITEMS.keySet());
+			}
+			case 4 -> {
+				CustomItem customItem = ItemUtils.CUSTOM_ITEMS.get(args[2]);
+				if (customItem instanceof Typed typed) {
+					for (Typed.Type type : typed.getTypes()) {
+						completions.add(type.getNamespacedKey().getKey());
+					}
+				}
 			}
 			default -> {
 				return completions;

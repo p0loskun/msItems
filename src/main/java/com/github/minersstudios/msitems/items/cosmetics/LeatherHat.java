@@ -1,9 +1,11 @@
 package com.github.minersstudios.msitems.items.cosmetics;
 
 import com.github.minersstudios.msitems.Main;
+import com.github.minersstudios.msitems.items.CustomItem;
 import com.github.minersstudios.msitems.items.Renameable;
 import com.github.minersstudios.msitems.items.Wearable;
 import com.github.minersstudios.msitems.utils.ChatUtils;
+import com.google.common.collect.Lists;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -23,7 +25,7 @@ import java.util.UUID;
 public class LeatherHat implements Renameable, Wearable {
 	private @NotNull NamespacedKey namespacedKey;
 	private @NotNull ItemStack itemStack;
-	private @Nullable Recipe recipe;
+	private @Nullable List<Recipe> recipes;
 	private boolean showInCraftsMenu;
 
 	public LeatherHat() {
@@ -38,11 +40,12 @@ public class LeatherHat implements Renameable, Wearable {
 				new AttributeModifier(UUID.randomUUID(), "armor", 1.0f, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HEAD)
 		);
 		this.itemStack.setItemMeta(itemMeta);
-		this.recipe = new ShapedRecipe(new NamespacedKey(Main.getInstance(), "leather_hat"), this.itemStack)
+		ShapedRecipe shapedRecipe = new ShapedRecipe(this.namespacedKey, this.itemStack)
 				.shape(
 						" L ",
 						"LLL"
 				).setIngredient('L', Material.LEATHER);
+		this.recipes = Lists.newArrayList(shapedRecipe);
 		this.showInCraftsMenu = true;
 	}
 
@@ -67,13 +70,13 @@ public class LeatherHat implements Renameable, Wearable {
 	}
 
 	@Override
-	public @Nullable Recipe getRecipe() {
-		return this.recipe;
+	public @Nullable List<Recipe> getRecipes() {
+		return this.recipes;
 	}
 
 	@Override
-	public void setRecipe(@Nullable Recipe recipe) {
-		this.recipe = recipe;
+	public void setRecipes(@Nullable List<Recipe> recipes) {
+		this.recipes = recipes;
 	}
 
 	@Override
@@ -84,6 +87,15 @@ public class LeatherHat implements Renameable, Wearable {
 	@Override
 	public void setShowInCraftsMenu(boolean showInCraftsMenu) {
 		this.showInCraftsMenu = showInCraftsMenu;
+	}
+
+	@Override
+	public @NotNull CustomItem clone() {
+		try {
+			return (CustomItem) super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override

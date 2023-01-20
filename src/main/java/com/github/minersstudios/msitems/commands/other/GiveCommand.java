@@ -2,6 +2,7 @@ package com.github.minersstudios.msitems.commands.other;
 
 import com.github.minersstudios.msitems.items.CustomItem;
 import com.github.minersstudios.msitems.items.RenameableItem;
+import com.github.minersstudios.msitems.items.Typed;
 import com.github.minersstudios.msitems.utils.ChatUtils;
 import com.github.minersstudios.msitems.utils.ItemUtils;
 import net.kyori.adventure.text.Component;
@@ -22,22 +23,37 @@ public class GiveCommand {
 
 			int amount = args.length == 4 && args[3].matches("[0-99]+")
 					? Integer.parseInt(args[3])
+					: args.length == 5 && args[4].matches("[0-99]+")
+					? Integer.parseInt(args[4])
 					: 1;
 			if (player == null) {
 				return ChatUtils.sendError(sender, Component.text("Данный игрок не на сервере!"));
 			}
+
 			ItemStack itemStack;
 			RenameableItem renameableItem = ItemUtils.RENAMEABLE_ITEMS.get(args[2]);
 			CustomItem customItem = ItemUtils.CUSTOM_ITEMS.get(args[2]);
 			if (customItem == null) {
 				if (renameableItem == null) {
-					return ChatUtils.sendError(sender, Component.text("Такого блока не существует!"));
+					return ChatUtils.sendError(sender, Component.text("Такого предмета не существует!"));
 				} else {
 					itemStack = renameableItem.getResultItemStack();
 				}
 			} else {
+				if (
+						customItem instanceof Typed typed
+						&& args.length == 4
+						&& !args[3].matches("[0-99]+")
+				) {
+					for (Typed.Type type : typed.getTypes()) {
+						if (type.getNamespacedKey().getKey().equals(args[3])) {
+							customItem = typed.createCustomItem(type);
+						}
+					}
+				}
 				itemStack = customItem.getItemStack();
 			}
+
 			itemStack.setAmount(amount);
 			player.getInventory().addItem(itemStack);
 			return ChatUtils.sendInfo(sender, Component.text("Выдано " + amount + " " + ChatUtils.convertPlainComponentToString(Objects.requireNonNull(itemStack.displayName())) + " Игроку : " + player.getName()));
