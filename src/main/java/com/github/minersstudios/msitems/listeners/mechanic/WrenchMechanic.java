@@ -107,6 +107,6 @@ public class WrenchMechanic implements Listener {
 			this.itemInMainHand.setItemMeta(damageable);
 		}
 		this.player.swingMainHand();
-		this.player.getWorld().playSound(this.location, Sound.ITEM_SPYGLASS_USE, 1.0f, 1.0f);
+		this.player.getWorld().playSound(this.location, Sound.ITEM_SPYGLASS_USE, SoundCategory.PLAYERS, 1.0f, 1.0f);
 	}
 }

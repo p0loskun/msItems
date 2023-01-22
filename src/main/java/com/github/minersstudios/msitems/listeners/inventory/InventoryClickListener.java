@@ -10,6 +10,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -90,7 +91,7 @@ public class InventoryClickListener implements Listener {
 						openRename(player, currentItem, firstItemIndex);
 					}
 				}
-				player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+				player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 0.5f, 1.0f);
 				event.setCancelled(!clickType.isCreativeAction());
 			}
 
@@ -100,7 +101,7 @@ public class InventoryClickListener implements Listener {
 					ItemStack item = clickedInventory.getItem(currentRenameableItemSlot);
 					boolean hasExp = player.getLevel() >= 1 || player.getGameMode() == GameMode.CREATIVE;
 					if (slot == quitRenameButtonSlot) {
-						player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.0f);
+						player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, SoundCategory.PLAYERS, 0.5f, 1.0f);
 						player.openInventory(getInventory(arrow.getItemMeta().getCustomModelData() - 1));
 					} else if (slot == currentRenameableItemSlot) {
 						ItemStack secondItem = clickedInventory.getItem(renamedItemSlot);
