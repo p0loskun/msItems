@@ -1,10 +1,11 @@
 package com.github.minersstudios.msitems.items.cosmetics;
 
-import com.github.minersstudios.msitems.Main;
+import com.github.minersstudios.mscore.utils.Badges;
+import com.github.minersstudios.mscore.utils.ChatUtils;
+import com.github.minersstudios.msitems.MSItems;
 import com.github.minersstudios.msitems.items.CustomItem;
 import com.github.minersstudios.msitems.items.Renameable;
 import com.github.minersstudios.msitems.items.Wearable;
-import com.github.minersstudios.msitems.utils.ChatUtils;
 import com.google.common.collect.Lists;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -29,12 +30,13 @@ public class LeatherHat implements Renameable, Wearable {
 	private boolean showInCraftsMenu;
 
 	public LeatherHat() {
-		this.namespacedKey = new NamespacedKey(Main.getInstance(), "leather_hat");
+		this.namespacedKey = new NamespacedKey(MSItems.getInstance(), "leather_hat");
 		this.itemStack = new ItemStack(Material.LEATHER_HORSE_ARMOR);
 		ItemMeta itemMeta = this.itemStack.getItemMeta();
-		itemMeta.displayName(ChatUtils.createDefaultStyledName("Кожаная шляпа"));
+		itemMeta.displayName(ChatUtils.createDefaultStyledText("Кожаная шляпа"));
 		itemMeta.setCustomModelData(999);
-		itemMeta.lore(ChatUtils.PAINTABLE_LORE_COMPONENT);
+		itemMeta.lore(Badges.PAINTABLE_LORE_COMPONENT);
+
 		itemMeta.addAttributeModifier(
 				Attribute.GENERIC_ARMOR,
 				new AttributeModifier(UUID.randomUUID(), "armor", 1.0f, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HEAD)
@@ -105,38 +107,39 @@ public class LeatherHat implements Renameable, Wearable {
 
 	public enum Item implements Renameable.Item {
 		//<editor-fold desc="Hats">
-		LEATHER_HAT(999, "Кожаная шляпа", ChatUtils.PAINTABLE_LORE),
-		SANTA_HAT(1258, "Колпак санты", ChatUtils.PAINTABLE_LORE),
+		LEATHER_HAT(999, "Кожаная шляпа", Badges.PAINTABLE_LORE),
+		SANTA_HAT(1258, "Колпак санты", Badges.PAINTABLE_LORE),
+		GAS_MASK(1369, "Противогаз"),
 		THREED_GLASSES(1211, "3Д Очки"),
 		NECTAR_BEE(1213, "Пчела с пыльцой"),
 		BEE(1212, "Пчела"),
 		ANGRY_NECTAR_BEE(1215, "Злая пчела с пыльцой"),
 		ANGRY_BEE(1214, "Злая пчела"),
 		PHANTOM(1216, "Фантом"),
-		BERET(1217, "Берет", ChatUtils.PAINTABLE_LORE),
-		CAP(1218, "Кепка", ChatUtils.PAINTABLE_LORE),
-		CARDBOARD_CROWN(1219, "Корона из картона", ChatUtils.PAINTABLE_LORE),
-		CHEF_HAT(1220, "Колпак шефа", ChatUtils.PAINTABLE_LORE),
-		POVAR_HAT(1221, "Колпак повара", ChatUtils.PAINTABLE_LORE),
+		BERET(1217, "Берет", Badges.PAINTABLE_LORE),
+		CAP(1218, "Кепка", Badges.PAINTABLE_LORE),
+		CARDBOARD_CROWN(1219, "Корона из картона", Badges.PAINTABLE_LORE),
+		CHEF_HAT(1220, "Колпак шефа", Badges.PAINTABLE_LORE),
+		POVAR_HAT(1221, "Колпак повара", Badges.PAINTABLE_LORE),
 		ENCHANTER_HAT(1222, "Чародейная шапка"),
 		GOAT_HEAD(1223, "Козья голова"),
 		MEDICINE_MASK(1224, "Медицинская маска"),
-		NEADER_MASK(1225, "Маска неандертальца", ChatUtils.PAINTABLE_LORE),
-		NEADER_MASK_O(1226, "Орущая маска неандертальца", ChatUtils.PAINTABLE_LORE),
-		NEADER_MASK_LEAVES(1227, "Маска с листьями неандертальца", ChatUtils.PAINTABLE_LORE),
-		NEADER_MASK_LEAVES_O(1228, "Орущая маска с листьями неандертальца", ChatUtils.PAINTABLE_LORE),
-		GOLDEN_PROTHESIS_LEFT(1229, "Левый золотой глазной протез", ChatUtils.PAINTABLE_LORE),
-		GOLDEN_PROTHESIS_RIGHT(1230, "Правый золотой глазной протез", ChatUtils.PAINTABLE_LORE),
-		SILVER_PROTHESIS_LEFT(1231, "Левый серебряный глазной протез", ChatUtils.PAINTABLE_LORE),
-		SILVER_PROTHESIS_RIGHT(1232, "Правый серебряный глазной протез", ChatUtils.PAINTABLE_LORE),
+		NEADER_MASK(1225, "Маска неандертальца", Badges.PAINTABLE_LORE),
+		NEADER_MASK_O(1226, "Орущая маска неандертальца", Badges.PAINTABLE_LORE),
+		NEADER_MASK_LEAVES(1227, "Маска с листьями неандертальца", Badges.PAINTABLE_LORE),
+		NEADER_MASK_LEAVES_O(1228, "Орущая маска с листьями неандертальца", Badges.PAINTABLE_LORE),
+		GOLDEN_PROTHESIS_LEFT(1229, "Левый золотой глазной протез", Badges.PAINTABLE_LORE),
+		GOLDEN_PROTHESIS_RIGHT(1230, "Правый золотой глазной протез", Badges.PAINTABLE_LORE),
+		SILVER_PROTHESIS_LEFT(1231, "Левый серебряный глазной протез", Badges.PAINTABLE_LORE),
+		SILVER_PROTHESIS_RIGHT(1232, "Правый серебряный глазной протез", Badges.PAINTABLE_LORE),
 		RACOON_HAT(1233, "Шапка из енота"),
 		SAMURAI(1234, "Кабуто"),
-		SAMURAI_MASK(1235, "Кабуто с маской"),
+		SAMURAI_MASK(1235, "Маска с кабуто"),
 		SCULK(1236, "Усики вардена"),
-		SUN_HAT(1237, "Соломенная шляпа", ChatUtils.PAINTABLE_LORE),
-		WAITER_CAP(1238, "Официантская шапочка", ChatUtils.PAINTABLE_LORE),
+		SUN_HAT(1237, "Соломенная шляпа", Badges.PAINTABLE_LORE),
+		WAITER_CAP(1238, "Официантская шапочка", Badges.PAINTABLE_LORE),
 		WESTERN_HAT(1239, "Ковбойская шляпа"),
-		WOLF_HEAD(1240, "Волчья голова", ChatUtils.PAINTABLE_LORE),
+		WOLF_HEAD(1240, "Волчья голова", Badges.PAINTABLE_LORE),
 		//<editor-fold desc="Villager hats">
 		ARMORER_HAT(1241, "Очки бронника"),
 		BUTCHER_HAT(1242, "Повязка мясника"),

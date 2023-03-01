@@ -1,15 +1,17 @@
-package com.github.minersstudios.msitems.commands.other;
+package com.github.minersstudios.msitems.commands;
 
+import com.github.minersstudios.mscore.MSCommand;
+import com.github.minersstudios.mscore.MSCommandExecutor;
+import com.github.minersstudios.mscore.utils.ChatUtils;
 import com.github.minersstudios.msitems.items.RenameableItem;
-import com.github.minersstudios.msitems.utils.ChatUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class RenamesCommand implements CommandExecutor {
+@MSCommand(command = "renames")
+public class RenamesCommand implements MSCommandExecutor {
 
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String @NotNull ... args) {

@@ -1,7 +1,11 @@
 package com.github.minersstudios.msitems.utils;
 
-import com.github.minersstudios.msitems.Main;
+import com.github.minersstudios.mscore.MSCore;
+import com.github.minersstudios.msitems.MSItems;
 import com.github.minersstudios.msitems.items.RenameableItem;
+import com.github.minersstudios.msitems.items.cosmetics.LeatherHat;
+import com.github.minersstudios.msitems.items.items.*;
+import com.github.minersstudios.msitems.items.items.cards.CardsBicycle;
 import net.kyori.adventure.text.Component;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.bukkit.Material;
@@ -22,7 +26,7 @@ import java.util.stream.Stream;
 public final class ConfigCache {
 
 	public ConfigCache() {
-		try (Stream<Path> path = Files.walk(Paths.get(Main.getInstance().getDataFolder() + "/items"))) {
+		try (Stream<Path> path = Files.walk(Paths.get(MSItems.getInstance().getPluginFolder() + "/items"))) {
 			path.filter(Files::isRegularFile)
 					.map(Path::toFile)
 					.forEach((file) -> {
@@ -54,16 +58,26 @@ public final class ConfigCache {
 						itemMeta.setCustomModelData(renameableItemConfig.getInt("custom-model-data"));
 						resultItemStack.setItemMeta(itemMeta);
 						RenameableItem renameableItem = new RenameableItem(
-								new NamespacedKey(Main.getInstance(), Objects.requireNonNull(renameableItemConfig.getString("namespaced-key"), fileName + " namespaced-key must be NotNull!")),
+								new NamespacedKey(MSItems.getInstance(), Objects.requireNonNull(renameableItemConfig.getString("namespaced-key"), fileName + " namespaced-key must be NotNull!")),
 								Objects.requireNonNull(renameableItemConfig.getString("rename-text"), fileName + " rename-text must be NotNull!"),
 								renameableItemStacks,
 								resultItemStack,
 								renameableItemConfig.getBoolean("show-in-rename-menu")
 						);
-						ItemUtils.RENAMEABLE_ITEMS.put(renameableItem.getNamespacedKey().getKey(), renameableItem);
+						MSCore.getConfigCache().renameableItemMap.put(renameableItem.getNamespacedKey().getKey(), itemMeta.getCustomModelData(), renameableItem);
 					});
 		} catch (IOException e) {
-			Main.getInstance().getLogger().info(ExceptionUtils.getStackTrace(e));
+			MSItems.getInstance().getLogger().info(ExceptionUtils.getStackTrace(e));
 		}
+	}
+
+	public static void registerItems() {
+		new LeatherHat().register();
+		new RawPlumbum().register();
+		new Plumbum().register();
+		new BanSword().register();
+		new Wrench().register();
+		new CardsBicycle().register();
+		new Cocaine().register();
 	}
 }

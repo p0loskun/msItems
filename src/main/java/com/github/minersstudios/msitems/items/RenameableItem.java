@@ -1,8 +1,8 @@
 package com.github.minersstudios.msitems.items;
 
-import com.github.minersstudios.msitems.Main;
-import com.github.minersstudios.msitems.utils.ChatUtils;
-import com.github.minersstudios.msitems.utils.ItemUtils;
+import com.github.minersstudios.mscore.MSCore;
+import com.github.minersstudios.mscore.utils.ChatUtils;
+import com.github.minersstudios.msitems.MSItems;
 import com.google.common.collect.Lists;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -41,10 +41,10 @@ public class RenameableItem {
 		this.renameableItemStacks = renameableItemStacks;
 		this.resultItemStack = resultItemStack;
 		ItemMeta itemMeta = this.resultItemStack.getItemMeta();
-		itemMeta.displayName(ChatUtils.createDefaultStyledName(renameText));
+		itemMeta.displayName(ChatUtils.createDefaultStyledText(renameText));
 		this.resultItemStack.setItemMeta(itemMeta);
 		if (showInRenameMenu) {
-			ItemUtils.RENAMEABLE_ITEMS_MENU.add(this);
+			MSCore.getConfigCache().renameableItemsMenu.add(this);
 		}
 	}
 
@@ -53,7 +53,7 @@ public class RenameableItem {
 		if (renameText == null || itemStack == null) return null;
 		ItemStack newItemStack = itemStack.clone();
 		ItemMeta itemMeta = newItemStack.getItemMeta();
-		itemMeta.displayName(ChatUtils.createDefaultStyledName(renameText));
+		itemMeta.displayName(ChatUtils.createDefaultStyledText(renameText));
 		itemMeta.lore(this.resultItemStack.lore());
 		itemMeta.setCustomModelData(this.resultItemStack.getItemMeta().getCustomModelData());
 		newItemStack.setItemMeta(itemMeta);
@@ -102,9 +102,9 @@ public class RenameableItem {
 
 	public static class Menu {
 		public static final Component
-				MENU_NAME = ChatUtils.createDefaultStyledName("뀂ꀰ"),
-				RENAME_SELECTION_NAME = ChatUtils.createDefaultStyledName("뀃ꀱ");
-		public static RenameableItem[] values = ItemUtils.RENAMEABLE_ITEMS_MENU.toArray(new RenameableItem[0]);
+				MENU_NAME = ChatUtils.createDefaultStyledText("뀂ꀰ"),
+				RENAME_SELECTION_NAME = ChatUtils.createDefaultStyledText("뀃ꀱ");
+		public static RenameableItem[] values = MSCore.getConfigCache().renameableItemsMenu.toArray(new RenameableItem[0]);
 		public static final int
 				arrowSlot = 4,
 				renameableItemSlot = 2,
@@ -149,7 +149,7 @@ public class RenameableItem {
 									this.index = 0;
 								}
 							}
-						}.runTaskTimer(Main.getInstance(), 0L, 10L);
+						}.runTaskTimer(MSItems.getInstance(), 0L, 10L);
 					}
 					inventory.setItem(arrowSlot, getArrow(pageIndex));
 					inventory.setItem(renamedItemSlot, itemStack);

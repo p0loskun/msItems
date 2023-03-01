@@ -1,7 +1,9 @@
 package com.github.minersstudios.msitems.listeners.mechanic;
 
+import com.github.minersstudios.mscore.MSListener;
+import com.github.minersstudios.mscore.utils.ItemUtils;
 import com.github.minersstudios.msitems.items.items.cards.CardsBicycle;
-import com.github.minersstudios.msitems.utils.ItemUtils;
+import com.github.minersstudios.msitems.utils.CustomItemUtils;
 import com.google.common.collect.Lists;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,13 +22,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
+@MSListener
 public class CardBoxMechanic implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onInventoryMoveItem(@NotNull InventoryMoveItemEvent event) {
 		if (
 				event.getDestination().getType() == InventoryType.SHULKER_BOX
-				&& ItemUtils.getCustomItem(event.getItem()) instanceof CardsBicycle
+				&& CustomItemUtils.getCustomItem(event.getItem()) instanceof CardsBicycle
 		) {
 			event.setCancelled(true);
 		}
@@ -36,7 +39,7 @@ public class CardBoxMechanic implements Listener {
 	public void onInventoryDrag(@NotNull InventoryDragEvent event) {
 		if (
 				event.getInventory().getType() == InventoryType.SHULKER_BOX
-				&& ItemUtils.getCustomItem(event.getOldCursor()) instanceof CardsBicycle
+				&& CustomItemUtils.getCustomItem(event.getOldCursor()) instanceof CardsBicycle
 		) {
 			event.setCancelled(true);
 		}
@@ -51,10 +54,10 @@ public class CardBoxMechanic implements Listener {
 		if (
 				(clickedInventory != null
 				&& clickedInventory.getType() == InventoryType.SHULKER_BOX
-				&& ItemUtils.getCustomItem(cursorItem) instanceof CardsBicycle)
+				&& CustomItemUtils.getCustomItem(cursorItem) instanceof CardsBicycle)
 				|| (event.isShiftClick()
 				&& event.getWhoClicked().getOpenInventory().getType() == InventoryType.SHULKER_BOX
-				&& ItemUtils.getCustomItem(currentItem) instanceof CardsBicycle)
+				&& CustomItemUtils.getCustomItem(currentItem) instanceof CardsBicycle)
 		) {
 			event.setCancelled(true);
 		}
@@ -62,12 +65,12 @@ public class CardBoxMechanic implements Listener {
 		if (cursorItem == null || currentItem == null || !event.isRightClick()) return;
 		if (
 				!cursorItem.getType().isAir()
-				&& ItemUtils.getCustomItem(currentItem) instanceof CardsBicycle
+				&& CustomItemUtils.getCustomItem(currentItem) instanceof CardsBicycle
 		) {
 			addCardToCardBox(event, currentItem, cursorItem);
 		} else if (
 				!currentItem.getType().isAir()
-				&& ItemUtils.getCustomItem(cursorItem) instanceof CardsBicycle
+				&& CustomItemUtils.getCustomItem(cursorItem) instanceof CardsBicycle
 		) {
 			addCardToCardBox(event, cursorItem, currentItem);
 		}

@@ -1,7 +1,6 @@
 package com.github.minersstudios.msitems.items;
 
-import com.github.minersstudios.msitems.Main;
-import com.github.minersstudios.msitems.utils.ItemUtils;
+import com.github.minersstudios.msitems.MSItems;
 import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -12,6 +11,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+
+import static com.github.minersstudios.mscore.MSCore.getConfigCache;
 
 @SuppressWarnings("unused")
 public interface CustomItem extends Cloneable {
@@ -44,11 +45,26 @@ public interface CustomItem extends Cloneable {
 	default void register(boolean regRecipes) {
 		if (this instanceof FullTyped fullTyped) {
 			for (Typed.Type type : fullTyped.getTypes()) {
-				ItemUtils.CUSTOM_ITEMS.put(type.getNamespacedKey().getKey(), fullTyped.createCustomItem(type));
+				getConfigCache().customItemMap.put(type.getNamespacedKey().getKey(), type.getCustomModelData(), fullTyped.createCustomItem(type));
+			}
+		} else if (this instanceof Renameable renameable) {
+			for (Renameable.Item item : renameable.getRenameableItems()) {
+				ItemStack itemStack = renameable.createRenamedItem(renameable.getItemStack(), item.getRenameText());
+				if (itemStack != null && !renameable.getItemStack().isSimilar(itemStack)) {
+					getConfigCache().customItemMap.put(renameable.getNamespacedKey().getKey(), itemStack.getItemMeta().getCustomModelData(), this);
+					new RenameableItem(
+							new NamespacedKey(MSItems.getInstance(), this.getNamespacedKey().getKey() + "." + item.getKey()),
+							item.getRenameText(),
+							Lists.newArrayList(getItemStack()),
+							itemStack,
+							item.isShowInRenameMenu()
+					);
+				}
 			}
 		} else {
-			ItemUtils.CUSTOM_ITEMS.put(this.getNamespacedKey().getKey(), this);
+			getConfigCache().customItemMap.put(this.getNamespacedKey().getKey(), this.getItemStack().getItemMeta().getCustomModelData(), this);
 		}
+
 		if (regRecipes) {
 			List<Recipe> recipes = this.getRecipes();
 			if (recipes != null) {
@@ -56,21 +72,7 @@ public interface CustomItem extends Cloneable {
 					Bukkit.addRecipe(recipe);
 				}
 				if (isShowInCraftsMenu()) {
-					ItemUtils.CUSTOM_ITEM_RECIPES.addAll(this.getRecipes());
-				}
-			}
-		}
-		if (this instanceof Renameable renameable) {
-			for (Renameable.Item item : renameable.getRenameableItems()) {
-				ItemStack itemStack = renameable.createRenamedItem(renameable.getItemStack(), item.getRenameText());
-				if (itemStack != null && !renameable.getItemStack().isSimilar(itemStack)) {
-					new RenameableItem(
-							new NamespacedKey(Main.getInstance(), this.getNamespacedKey().getKey() + "." + item.getKey()),
-							item.getRenameText(),
-							Lists.newArrayList(getItemStack()),
-							itemStack,
-							item.isShowInRenameMenu()
-					);
+					getConfigCache().customItemRecipes.addAll(this.getRecipes());
 				}
 			}
 		}

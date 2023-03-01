@@ -1,43 +1,49 @@
 package com.github.minersstudios.msitems.listeners.inventory;
 
+import com.github.minersstudios.mscore.MSListener;
+import com.github.minersstudios.mscore.utils.MSBlockUtils;
+import com.github.minersstudios.mscore.utils.MSDecorUtils;
+import com.github.minersstudios.mscore.utils.MSItemUtils;
 import com.github.minersstudios.msitems.items.Renameable;
 import com.github.minersstudios.msitems.items.RenameableItem;
-import com.github.minersstudios.msitems.utils.ItemUtils;
+import com.github.minersstudios.msitems.utils.CustomItemUtils;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
-import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
+@MSListener
 public class PrepareAnvilListener implements Listener {
 
 	@EventHandler
 	public void onPrepareAnvil(@NotNull PrepareAnvilEvent event) {
-		AnvilInventory inventory = event.getInventory();
-		ItemStack firstItem = inventory.getFirstItem();
-		String renameText = inventory.getRenameText();
-		if (ItemUtils.getCustomItem(firstItem) instanceof Renameable renameable) {
-			ItemStack renameableItem = renameable.createRenamedItem(firstItem, renameText);
+		ItemStack resultItem = event.getResult();
+		ItemStack firstItem = event.getInventory().getFirstItem();
+		String renameText = event.getInventory().getRenameText();
+		if (resultItem == null || firstItem == null) return;
+		if (CustomItemUtils.getCustomItem(resultItem) instanceof Renameable renameable) {
+			ItemStack renameableItem = renameable.createRenamedItem(resultItem, renameText);
 			if (renameableItem != null) {
-				event.setResult(ItemUtils.combineDurability(renameableItem, inventory.getSecondItem()));
+				event.setResult(renameableItem);
 			}
 		} else {
-			RenameableItem renameableItem = ItemUtils.getRenameableItem(firstItem, renameText);
+			RenameableItem renameableItem = CustomItemUtils.getRenameableItem(resultItem, renameText);
 			if (renameableItem != null) {
-				ItemStack renamedItem = renameableItem.createRenamedItem(firstItem, renameText);
-				event.setResult(
-						renamedItem == null ? null
-						: ItemUtils.combineDurability(renamedItem, inventory.getSecondItem())
-				);
-			} else {
-				ItemStack itemStack = event.getResult();
-				if (itemStack == null) return;
-				ItemMeta itemMeta = itemStack.getItemMeta();
+				ItemStack renamedItem = renameableItem.createRenamedItem(resultItem, renameText);
+				if (renamedItem != null) {
+					event.setResult(renamedItem);
+				}
+			} else if (
+					!MSBlockUtils.isCustomBlock(firstItem)
+					&& !MSDecorUtils.isCustomDecor(firstItem)
+					&& MSItemUtils.isCustomItem(firstItem, false)
+			) {
+				ItemMeta itemMeta = resultItem.getItemMeta();
 				itemMeta.setCustomModelData(null);
-				itemStack.setItemMeta(itemMeta);
-				event.setResult(ItemUtils.combineDurability(itemStack, inventory.getSecondItem()));
+				resultItem.setItemMeta(itemMeta);
+				event.setResult(resultItem);
 			}
 		}
 	}

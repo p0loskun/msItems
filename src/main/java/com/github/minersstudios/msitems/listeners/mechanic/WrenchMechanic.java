@@ -1,16 +1,19 @@
 package com.github.minersstudios.msitems.listeners.mechanic;
 
+import com.github.minersstudios.mscore.MSListener;
+import com.github.minersstudios.mscore.utils.MSDecorUtils;
 import com.github.minersstudios.msdecor.customdecor.Sittable;
 import com.github.minersstudios.msdecor.customdecor.Typed;
 import com.github.minersstudios.msdecor.customdecor.Wrenchable;
-import com.github.minersstudios.msdecor.utils.BlockUtils;
 import com.github.minersstudios.msdecor.utils.CustomDecorUtils;
-import com.github.minersstudios.msdecor.utils.EntityUtils;
 import com.github.minersstudios.msitems.items.items.Wrench;
-import com.github.minersstudios.msitems.utils.ItemUtils;
+import com.github.minersstudios.msitems.utils.CustomItemUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.entity.*;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.ItemFrame;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -24,6 +27,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@MSListener
 public class WrenchMechanic implements Listener {
 	private Player player;
 	private Location location;
@@ -42,11 +46,11 @@ public class WrenchMechanic implements Listener {
 		this.location = clickedBlock.getLocation().toCenterLocation();
 		if (
 				event.getHand() == EquipmentSlot.HAND
-				&& ItemUtils.getCustomItem(this.itemInMainHand) instanceof Wrench
+				&& CustomItemUtils.getCustomItem(this.itemInMainHand) instanceof Wrench
 		) {
 			event.setCancelled(Tag.DIRT.isTagged(clickedBlock.getType()));
 			if (
-					BlockUtils.isCustomDecorMaterial(clickedBlock.getType())
+					MSDecorUtils.isCustomDecorMaterial(clickedBlock.getType())
 					&& CustomDecorUtils.getCustomDecorDataByLocation(this.location) instanceof Wrenchable wrenchable
 			) {
 				if (wrenchable instanceof Sittable && !this.player.isSneaking()) return;
@@ -69,13 +73,13 @@ public class WrenchMechanic implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerInteractAtEntity(@NotNull PlayerInteractAtEntityEvent event) {
 		Entity entity = event.getRightClicked();
-		if (!EntityUtils.isCustomDecorEntity(entity)) return;
+		if (!MSDecorUtils.isCustomDecorEntity(entity)) return;
 		this.player = event.getPlayer();
 		this.itemInMainHand = this.player.getInventory().getItemInMainHand();
 		this.location = entity.getLocation();
 		if (
 				event.getHand() == EquipmentSlot.HAND
-				&& ItemUtils.getCustomItem(this.itemInMainHand) instanceof Wrench
+				&& CustomItemUtils.getCustomItem(this.itemInMainHand) instanceof Wrench
 				&& CustomDecorUtils.getCustomDecorDataByEntity(entity) instanceof Wrenchable wrenchable
 		) {
 			this.use(entity, wrenchable);

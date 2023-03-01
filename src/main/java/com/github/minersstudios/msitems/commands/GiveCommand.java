@@ -1,10 +1,10 @@
-package com.github.minersstudios.msitems.commands.other;
+package com.github.minersstudios.msitems.commands;
 
+import com.github.minersstudios.mscore.MSCore;
+import com.github.minersstudios.mscore.utils.ChatUtils;
 import com.github.minersstudios.msitems.items.CustomItem;
 import com.github.minersstudios.msitems.items.RenameableItem;
 import com.github.minersstudios.msitems.items.Typed;
-import com.github.minersstudios.msitems.utils.ChatUtils;
-import com.github.minersstudios.msitems.utils.ItemUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -31,8 +31,8 @@ public class GiveCommand {
 			}
 
 			ItemStack itemStack;
-			RenameableItem renameableItem = ItemUtils.RENAMEABLE_ITEMS.get(args[2]);
-			CustomItem customItem = ItemUtils.CUSTOM_ITEMS.get(args[2]);
+			RenameableItem renameableItem = MSCore.getConfigCache().renameableItemMap.getByPrimaryKey(args[2]);
+			CustomItem customItem = MSCore.getConfigCache().customItemMap.getByPrimaryKey(args[2]);
 			if (customItem == null) {
 				if (renameableItem == null) {
 					return ChatUtils.sendError(sender, Component.text("Такого предмета не существует!"));
@@ -56,7 +56,7 @@ public class GiveCommand {
 
 			itemStack.setAmount(amount);
 			player.getInventory().addItem(itemStack);
-			return ChatUtils.sendInfo(sender, Component.text("Выдано " + amount + " " + ChatUtils.convertPlainComponentToString(Objects.requireNonNull(itemStack.displayName())) + " Игроку : " + player.getName()));
+			return ChatUtils.sendInfo(sender, Component.text("Выдано " + amount + " " + ChatUtils.serializeLegacyComponent(Objects.requireNonNull(itemStack.displayName())) + " Игроку : " + player.getName()));
 		}
 		return ChatUtils.sendWarning(sender, Component.text("Ник не может состоять менее чем из 3 символов!"));
 	}

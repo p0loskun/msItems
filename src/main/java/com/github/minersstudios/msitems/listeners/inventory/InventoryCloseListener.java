@@ -1,5 +1,6 @@
 package com.github.minersstudios.msitems.listeners.inventory;
 
+import com.github.minersstudios.mscore.MSListener;
 import com.github.minersstudios.msitems.items.RenameableItem;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
@@ -11,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
+@MSListener
 public class InventoryCloseListener implements Listener {
 
 	@EventHandler

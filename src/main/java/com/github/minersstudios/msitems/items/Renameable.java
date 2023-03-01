@@ -1,6 +1,6 @@
 package com.github.minersstudios.msitems.items;
 
-import com.github.minersstudios.msitems.utils.ChatUtils;
+import com.github.minersstudios.mscore.utils.ChatUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -42,7 +42,7 @@ public interface Renameable extends CustomItem {
 				ItemStack newItemStack = itemStack.clone();
 				ItemMeta itemMeta = newItemStack.getItemMeta();
 				itemMeta.setCustomModelData(renameableItem.getCustomModelData());
-				itemMeta.displayName(ChatUtils.createDefaultStyledName(renameText));
+				itemMeta.displayName(ChatUtils.createDefaultStyledText(renameText));
 				if (renameableItem.getLore() != null) {
 					List<Component> loreComponentList = new ArrayList<>();
 					for (String text : renameableItem.getLore()) {

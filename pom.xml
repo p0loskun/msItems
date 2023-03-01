@@ -1,91 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.minersstudios</groupId>
-    <artifactId>msItems</artifactId>
-    <version>0.2.0</version>
-    <packaging>jar</packaging>
+	<groupId>com.github.minersstudios</groupId>
+	<artifactId>msItems</artifactId>
+	<version>1.0.0</version>
+	<packaging>jar</packaging>
 
-    <name>msItems</name>
-    <description>A Minecraft plugin with custom items for WhoMine</description>
-    <url>https://github.com/MinersStudios/msItems</url>
+	<name>msItems</name>
+	<description>A Minecraft plugin with custom items for WhoMine</description>
+	<url>https://github.com/MinersStudios/msItems</url>
 
-    <organization>
-        <name>The game development team creates quality content. Currently, creating plugins for WhoMine</name>
-        <url>https://github.com/MinersStudios</url>
-    </organization>
+	<organization>
+		<name>The game development team creates quality content. Currently, creating plugins for WhoMine</name>
+		<url>https://github.com/MinersStudios</url>
+	</organization>
 
-    <developers>
-        <developer>
-            <name>Poloskun_</name>
-            <url>https://github.com/p0loskun</url>
-        </developer>
-    </developers>
+	<developers>
+		<developer>
+			<name>Poloskun_</name>
+			<url>https://github.com/p0loskun</url>
+		</developer>
+	</developers>
 
-    <properties>
-        <authors>[ Poloskun_ ]</authors>
-        <mainClass>com.github.minersstudios.msitems.Main</mainClass>
-        <apiVersion>1.19</apiVersion>
-        <java.version>17</java.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+	<properties>
+		<authors>[ Poloskun_ ]</authors>
+		<mainClass>com.github.minersstudios.msitems.MSItems</mainClass>
+		<apiVersion>1.19</apiVersion>
+		<java.version>17</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.9.0</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                </configuration>
-            </plugin>
-        </plugins>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-    </build>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.9.0</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+	</build>
 
-    <repositories>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-        <repository>
-            <id>papermc</id>
-            <url>https://repo.papermc.io/repository/maven-public/</url>
-        </repository>
-        <repository>
-            <id>spigotmc-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
-    </repositories>
+	<repositories>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+		<repository>
+			<id>papermc</id>
+			<url>https://repo.papermc.io/repository/maven-public/</url>
+		</repository>
+		<repository>
+			<id>spigotmc-repo</id>
+			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+		</repository>
+	</repositories>
 
-    <dependencies>
-        <dependency>
-            <groupId>io.papermc.paper</groupId>
-            <artifactId>paper-api</artifactId>
-            <version>1.19.3-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.12.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.MinersStudios</groupId>
-            <artifactId>msDecor</artifactId>
-            <version>release-b66ae999ad-1</version>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
+	<dependencies>
+		<dependency>
+			<groupId>io.papermc.paper</groupId>
+			<artifactId>paper-api</artifactId>
+			<version>1.19.3-R0.1-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.12.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.MinersStudios</groupId>
+			<artifactId>msCore</artifactId>
+			<version>release-ad80609c64-1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.MinersStudios</groupId>
+			<artifactId>msDecor</artifactId>
+			<version>1.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
 </project>

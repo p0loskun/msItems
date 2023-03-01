@@ -1,12 +1,13 @@
 package com.github.minersstudios.msitems.items.items.cards;
 
-import com.github.minersstudios.msitems.Main;
+import com.github.minersstudios.mscore.utils.ChatUtils;
+import com.github.minersstudios.msitems.MSItems;
 import com.github.minersstudios.msitems.items.CustomItem;
 import com.github.minersstudios.msitems.items.Typed;
-import com.github.minersstudios.msitems.utils.ChatUtils;
 import com.google.common.collect.Lists;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -146,10 +147,10 @@ public class CardsBicycle implements Typed {
 	);
 
 	public CardsBicycle() {
-		this.namespacedKey = new NamespacedKey(Main.getInstance(), "card_box_bicycle");
+		this.namespacedKey = new NamespacedKey(MSItems.getInstance(), "card_box_bicycle");
 		this.itemStack = Boxes.BOX_BLUE_1.getItemStack();
 		//<editor-fold desc="Recipes">
-		ShapedRecipe blue1 = new ShapedRecipe(new NamespacedKey(Main.getInstance(), "card_box_bicycle_blue_1"), Boxes.BOX_BLUE_1.getItemStack())
+		ShapedRecipe blue1 = new ShapedRecipe(new NamespacedKey(MSItems.getInstance(), "card_box_bicycle_blue_1"), Boxes.BOX_BLUE_1.getItemStack())
 				.shape(
 						"DSD",
 						"SPS",
@@ -157,7 +158,7 @@ public class CardsBicycle implements Typed {
 				).setIngredient('D', Material.BLUE_DYE)
 				.setIngredient('S', Material.STRING)
 				.setIngredient('P', Material.PAPER);
-		ShapedRecipe blue2 = new ShapedRecipe(new NamespacedKey(Main.getInstance(), "card_box_bicycle_blue_2"), Boxes.BOX_BLUE_2.getItemStack())
+		ShapedRecipe blue2 = new ShapedRecipe(new NamespacedKey(MSItems.getInstance(), "card_box_bicycle_blue_2"), Boxes.BOX_BLUE_2.getItemStack())
 				.shape(
 						"DSD",
 						"SPS",
@@ -166,7 +167,7 @@ public class CardsBicycle implements Typed {
 				.setIngredient('S', Material.STRING)
 				.setIngredient('P', Material.PAPER)
 				.setIngredient('I', Material.IRON_INGOT);
-		ShapedRecipe red1 = new ShapedRecipe(new NamespacedKey(Main.getInstance(), "card_box_bicycle_red_1"), Boxes.BOX_RED_1.getItemStack())
+		ShapedRecipe red1 = new ShapedRecipe(new NamespacedKey(MSItems.getInstance(), "card_box_bicycle_red_1"), Boxes.BOX_RED_1.getItemStack())
 				.shape(
 						"DSD",
 						"SPS",
@@ -174,7 +175,7 @@ public class CardsBicycle implements Typed {
 				).setIngredient('D', Material.RED_DYE)
 				.setIngredient('S', Material.STRING)
 				.setIngredient('P', Material.PAPER);
-		ShapedRecipe red2 = new ShapedRecipe(new NamespacedKey(Main.getInstance(), "card_box_bicycle_red_2"), Boxes.BOX_RED_2.getItemStack())
+		ShapedRecipe red2 = new ShapedRecipe(new NamespacedKey(MSItems.getInstance(), "card_box_bicycle_red_2"), Boxes.BOX_RED_2.getItemStack())
 				.shape(
 						"DSD",
 						"SPS",
@@ -244,7 +245,7 @@ public class CardsBicycle implements Typed {
 	) {
 		ItemStack itemStack = new ItemStack(Material.LEATHER_HORSE_ARMOR);
 		ItemMeta itemMeta = itemStack.getItemMeta();
-		itemMeta.displayName(ChatUtils.createDefaultStyledName(name));
+		itemMeta.displayName(ChatUtils.createDefaultStyledText(name));
 		itemMeta.setCustomModelData(customModelData);
 		itemMeta.lore(ChatUtils.convertStringsToComponents(ChatUtils.COLORLESS_DEFAULT_STYLE.color(NamedTextColor.GRAY), lore));
 		itemStack.setItemMeta(itemMeta);
@@ -260,30 +261,34 @@ public class CardsBicycle implements Typed {
 		//<editor-fold desc="Boxes">
 		BOX_BLUE_1(
 				1,
-				ChatUtils.createDefaultStyledName("Синяя колода карт ")
+				ChatUtils.createDefaultStyledText("Синяя колода карт ")
 						.append(Component.text("\"Bicycle\"")
-						.style(ChatUtils.DEFAULT_STYLE_BOLD)),
+						.style(ChatUtils.DEFAULT_STYLE))
+						.decorate(TextDecoration.BOLD),
 				BLUE_CARD_ITEMS
 		),
 		BOX_BLUE_2(
 				2,
-				ChatUtils.createDefaultStyledName("Синяя колода карт ")
+				ChatUtils.createDefaultStyledText("Синяя колода карт ")
 						.append(Component.text("\"Bicycle\"")
-						.style(ChatUtils.DEFAULT_STYLE_BOLD)),
+						.style(ChatUtils.DEFAULT_STYLE))
+						.decorate(TextDecoration.BOLD),
 				BLUE_CARD_ITEMS
 		),
 		BOX_RED_1(
 				3,
-				ChatUtils.createDefaultStyledName("Красная колода карт ")
+				ChatUtils.createDefaultStyledText("Красная колода карт ")
 						.append(Component.text("\"Bicycle\"")
-						.style(ChatUtils.DEFAULT_STYLE_BOLD)),
+						.style(ChatUtils.DEFAULT_STYLE))
+						.decorate(TextDecoration.BOLD),
 				RED_CARD_ITEMS
 		),
 		BOX_RED_2(
 				4,
-				ChatUtils.createDefaultStyledName("Красная колода карт ")
+				ChatUtils.createDefaultStyledText("Красная колода карт ")
 						.append(Component.text("\"Bicycle\"")
-						.style(ChatUtils.DEFAULT_STYLE_BOLD)),
+						.style(ChatUtils.DEFAULT_STYLE))
+						.decorate(TextDecoration.BOLD),
 				RED_CARD_ITEMS
 		);
 		//</editor-fold>
@@ -298,7 +303,7 @@ public class CardsBicycle implements Typed {
 				@NotNull Component itemName,
 				@NotNull List<ItemStack> cardItems
 		) {
-			this.namespacedKey = new NamespacedKey(Main.getInstance(), this.name().toLowerCase(Locale.ROOT) + "_card_box_bicycle");
+			this.namespacedKey = new NamespacedKey(MSItems.getInstance(), this.name().toLowerCase(Locale.ROOT) + "_card_box_bicycle");
 			this.customModelData = customModelData;
 			this.itemName = itemName;
 			this.itemStack = new ItemStack(Material.BUNDLE);

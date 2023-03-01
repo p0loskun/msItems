@@ -4,8 +4,6 @@ import com.github.minersstudios.mscore.utils.ChatUtils;
 import com.github.minersstudios.msitems.MSItems;
 import com.github.minersstudios.msitems.items.CustomItem;
 import com.google.common.collect.Lists;
-import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -17,29 +15,26 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class Wrench implements CustomItem {
+public class RawPlumbum implements CustomItem {
 	private @NotNull NamespacedKey namespacedKey;
 	private @NotNull ItemStack itemStack;
 	private @Nullable List<Recipe> recipes;
 	private boolean showInCraftsMenu;
 
-	public Wrench() {
-		this.namespacedKey = new NamespacedKey(MSItems.getInstance(), "wrench");
-		this.itemStack = new ItemStack(Material.IRON_SHOVEL);
+	public RawPlumbum() {
+		this.namespacedKey = new NamespacedKey(MSItems.getInstance(), "raw_plumbum");
+		this.itemStack = new ItemStack(Material.PAPER);
 		ItemMeta itemMeta = this.itemStack.getItemMeta();
-		itemMeta.displayName(ChatUtils.createDefaultStyledText("Гаечный ключ"));
-		itemMeta.setCustomModelData(1);
-		itemMeta.lore(ChatUtils.convertStringsToComponents(
-				ChatUtils.COLORLESS_DEFAULT_STYLE.color(NamedTextColor.GRAY),
-				"С его помощью вы можете",
-				"изменять вид декораций,",
-				"которые помечены как : ",
-				ChatColor.WHITE + "ꀳ"
-		));
+		itemMeta.displayName(ChatUtils.createDefaultStyledText("Рудной свинец"));
+		itemMeta.setCustomModelData(12001);
 		this.itemStack.setItemMeta(itemMeta);
 		ShapedRecipe shapedRecipe = new ShapedRecipe(this.namespacedKey, this.itemStack)
-				.shape("I", "I", "I")
-				.setIngredient('I', Material.IRON_INGOT);
+				.shape(
+						" I ",
+						"BIB",
+						" I "
+				).setIngredient('I', Material.RAW_IRON)
+				.setIngredient('B', Material.WATER_BUCKET);
 		this.recipes = Lists.newArrayList(shapedRecipe);
 		this.showInCraftsMenu = true;
 	}

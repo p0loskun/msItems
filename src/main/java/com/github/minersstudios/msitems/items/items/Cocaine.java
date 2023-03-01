@@ -5,41 +5,52 @@ import com.github.minersstudios.msitems.MSItems;
 import com.github.minersstudios.msitems.items.CustomItem;
 import com.google.common.collect.Lists;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class Wrench implements CustomItem {
+public class Cocaine implements CustomItem {
 	private @NotNull NamespacedKey namespacedKey;
 	private @NotNull ItemStack itemStack;
 	private @Nullable List<Recipe> recipes;
 	private boolean showInCraftsMenu;
 
-	public Wrench() {
-		this.namespacedKey = new NamespacedKey(MSItems.getInstance(), "wrench");
-		this.itemStack = new ItemStack(Material.IRON_SHOVEL);
-		ItemMeta itemMeta = this.itemStack.getItemMeta();
-		itemMeta.displayName(ChatUtils.createDefaultStyledText("Гаечный ключ"));
-		itemMeta.setCustomModelData(1);
-		itemMeta.lore(ChatUtils.convertStringsToComponents(
+	public Cocaine() {
+		this.namespacedKey = new NamespacedKey(MSItems.getInstance(), "cocaine");
+		this.itemStack = new ItemStack(Material.POTION);
+		PotionMeta potionMeta = (PotionMeta) this.itemStack.getItemMeta();
+		potionMeta.addCustomEffect(new PotionEffect(PotionEffectType.CONFUSION, 3600, 1), true);
+		potionMeta.addCustomEffect(new PotionEffect(PotionEffectType.HUNGER, 3600, 1), true);
+		potionMeta.addCustomEffect(new PotionEffect(PotionEffectType.SPEED, 1200, 1), true);
+		potionMeta.addCustomEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 800, 1), true);
+		potionMeta.addCustomEffect(new PotionEffect(PotionEffectType.ABSORPTION, 1200, 1), true);
+		potionMeta.displayName(ChatUtils.createDefaultStyledText("Кокаин"));
+		potionMeta.setCustomModelData(10);
+		potionMeta.lore(ChatUtils.convertStringsToComponents(
 				ChatUtils.COLORLESS_DEFAULT_STYLE.color(NamedTextColor.GRAY),
-				"С его помощью вы можете",
-				"изменять вид декораций,",
-				"которые помечены как : ",
-				ChatColor.WHITE + "ꀳ"
+				"",
+				"Простой путь",
+				"в мир чудес и тюрьмы"
 		));
-		this.itemStack.setItemMeta(itemMeta);
+		this.itemStack.setItemMeta(potionMeta);
 		ShapedRecipe shapedRecipe = new ShapedRecipe(this.namespacedKey, this.itemStack)
-				.shape("I", "I", "I")
-				.setIngredient('I', Material.IRON_INGOT);
+				.shape(
+						"NNN",
+						"FSF",
+						"LFL"
+				).setIngredient('N', Material.IRON_NUGGET)
+				.setIngredient('F', Material.FERN)
+				.setIngredient('S', Material.SUGAR_CANE)
+				.setIngredient('L', Material.OAK_LEAVES);
 		this.recipes = Lists.newArrayList(shapedRecipe);
 		this.showInCraftsMenu = true;
 	}

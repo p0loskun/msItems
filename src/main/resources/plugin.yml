@@ -6,7 +6,8 @@ website: ${url}
 
 main: ${mainClass}
 api-version: ${apiVersion}
-depend: [ msDecor ]
+softdepend:
+  - msCore
 commands:
   msitems:
     usage: " ꀑ §cИспользуй: /<command> [параметры]"
