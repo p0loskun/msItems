@@ -1,6 +1,7 @@
 package com.github.minersstudios.msitems.listeners.mechanic;
 
 import com.github.minersstudios.mscore.MSListener;
+import com.github.minersstudios.mscore.utils.ItemUtils;
 import com.github.minersstudios.msitems.items.DamageableItem;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,10 +15,9 @@ public class DamageableItemMechanic implements Listener {
 	@EventHandler
 	public void onPlayerItemDamage(@NotNull PlayerItemDamageEvent event) {
 		ItemStack itemStack = event.getItem();
-		DamageableItem damageableItem = DamageableItem.fromItemStack(itemStack);
-		if (damageableItem != null) {
-			damageableItem.setRealDamage(damageableItem.getRealDamage() + event.getDamage());
-			damageableItem.saveForItemStack(itemStack);
+		if (DamageableItem.fromItemStack(itemStack) != null) {
+			event.setCancelled(true);
+			ItemUtils.damageItem(event.getPlayer(), event.getItem(), event.getDamage());
 		}
 	}
 }

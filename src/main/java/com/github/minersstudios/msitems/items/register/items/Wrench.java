@@ -4,6 +4,7 @@ import com.github.minersstudios.mscore.utils.ChatUtils;
 import com.github.minersstudios.mscore.utils.MSItemUtils;
 import com.github.minersstudios.msitems.MSItems;
 import com.github.minersstudios.msitems.items.CustomItem;
+import com.github.minersstudios.msitems.items.DamageableItem;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -19,12 +20,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 
-public class Wrench implements CustomItem {
+public class Wrench extends DamageableItem implements CustomItem {
 	private @NotNull NamespacedKey namespacedKey;
 	private @NotNull ItemStack itemStack;
 	private @Nullable List<Map.Entry<Recipe, Boolean>> recipes;
 
 	public Wrench() {
+		super(Material.IRON_SHOVEL.getMaxDurability(), 300);
 		this.namespacedKey = new NamespacedKey(MSItems.getInstance(), "wrench");
 		this.itemStack = new ItemStack(Material.IRON_SHOVEL);
 		ItemMeta itemMeta = this.itemStack.getItemMeta();
