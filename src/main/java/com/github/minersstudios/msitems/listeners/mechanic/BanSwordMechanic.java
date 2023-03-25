@@ -1,9 +1,9 @@
 package com.github.minersstudios.msitems.listeners.mechanic;
 
 import com.github.minersstudios.mscore.MSListener;
+import com.github.minersstudios.mscore.utils.MSItemUtils;
 import com.github.minersstudios.msitems.MSItems;
-import com.github.minersstudios.msitems.items.items.BanSword;
-import com.github.minersstudios.msitems.utils.CustomItemUtils;
+import com.github.minersstudios.msitems.items.register.items.BanSword;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,7 +22,7 @@ public class BanSwordMechanic implements Listener {
 		if (
 				!(event.getDamager() instanceof Player damager)
 				|| !(event.getEntity() instanceof Player damaged)
-				|| !(CustomItemUtils.getCustomItem(damager.getActiveItem()) instanceof BanSword)
+				|| !(MSItemUtils.getCustomItem(damager.getActiveItem()) instanceof BanSword)
 		) return;
 		event.setCancelled(true);
 		if (damager.isOp()) {
@@ -39,7 +39,7 @@ public class BanSwordMechanic implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onInventoryClick(@NotNull InventoryClickEvent event) {
 		ItemStack currentItem = event.getCurrentItem();
-		if (!(CustomItemUtils.getCustomItem(currentItem) instanceof BanSword)) return;
+		if (!(MSItemUtils.getCustomItem(currentItem) instanceof BanSword)) return;
 		currentItem.setAmount(0);
 		event.setCancelled(true);
 		Bukkit.getScheduler().runTask(MSItems.getInstance(), ((Player) event.getWhoClicked())::updateInventory);

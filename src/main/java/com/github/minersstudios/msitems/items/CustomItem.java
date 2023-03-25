@@ -10,7 +10,9 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import static com.github.minersstudios.mscore.MSCore.getConfigCache;
 
@@ -26,53 +28,69 @@ public interface CustomItem extends Cloneable {
 
 	void setItemStack(@NotNull ItemStack itemStack);
 
-	default @Nullable List<Recipe> getRecipes() {
+	default @Nullable List<Map.Entry<Recipe, Boolean>> getRecipes() {
 		return null;
 	}
 
-	default void setRecipes(@Nullable List<Recipe> recipes) {}
-
-	default boolean isShowInCraftsMenu() {
-		return false;
-	}
-
-	default void setShowInCraftsMenu(boolean showInCraftsMenu) {}
+	default void setRecipes(@Nullable List<Map.Entry<Recipe, Boolean>> recipes) {}
 
 	default void register() {
 		this.register(true);
 	}
 
 	default void register(boolean regRecipes) {
-		if (this instanceof FullTyped fullTyped) {
-			for (Typed.Type type : fullTyped.getTypes()) {
-				getConfigCache().customItemMap.put(type.getNamespacedKey().getKey(), type.getCustomModelData(), fullTyped.createCustomItem(type));
+		if (this instanceof DamageableItem damageableItem) {
+			damageableItem.saveForItemStack(this.getItemStack());
+		}
+
+		if (this instanceof Typed typed) {
+			for (Typed.Type type : typed.getTypes()) {
+				getConfigCache().customItemMap.put(
+						type.getNamespacedKey().getKey(),
+						type.getCustomModelData(),
+						typed.createCustomItem(type)
+				);
 			}
 		} else if (this instanceof Renameable renameable) {
 			for (Renameable.Item item : renameable.getRenameableItems()) {
 				ItemStack itemStack = renameable.createRenamedItem(renameable.getItemStack(), item.getRenameText());
 				if (itemStack != null && !renameable.getItemStack().isSimilar(itemStack)) {
-					getConfigCache().customItemMap.put(renameable.getNamespacedKey().getKey(), itemStack.getItemMeta().getCustomModelData(), this);
+					getConfigCache().customItemMap.put(item.getKey(), item.getCustomModelData(), this);
 					new RenameableItem(
 							new NamespacedKey(MSItems.getInstance(), this.getNamespacedKey().getKey() + "." + item.getKey()),
 							item.getRenameText(),
 							Lists.newArrayList(getItemStack()),
 							itemStack,
-							item.isShowInRenameMenu()
+							item.isShowInRenameMenu(),
+							new HashSet<>()
 					);
 				}
 			}
 		} else {
-			getConfigCache().customItemMap.put(this.getNamespacedKey().getKey(), this.getItemStack().getItemMeta().getCustomModelData(), this);
+			getConfigCache().customItemMap.put(
+					this.getNamespacedKey().getKey(),
+					this.getItemStack().getItemMeta().getCustomModelData(),
+					this
+			);
 		}
 
 		if (regRecipes) {
-			List<Recipe> recipes = this.getRecipes();
-			if (recipes != null) {
-				for (Recipe recipe : recipes) {
-					Bukkit.addRecipe(recipe);
-				}
-				if (isShowInCraftsMenu()) {
-					getConfigCache().customItemRecipes.addAll(this.getRecipes());
+			MSItems.getConfigCache().recipeItems.add(this);
+		}
+	}
+
+	default @Nullable List<Map.Entry<Recipe, Boolean>> initRecipes() {
+		return null;
+	}
+
+	default void registerRecipes() {
+		List<Map.Entry<Recipe, Boolean>> recipes = this.initRecipes();
+		if (recipes != null) {
+			for (Map.Entry<Recipe, Boolean> entry : recipes) {
+				Recipe recipe = entry.getKey();
+				Bukkit.addRecipe(recipe);
+				if (entry.getValue()) {
+					getConfigCache().customItemRecipes.add(recipe);
 				}
 			}
 		}

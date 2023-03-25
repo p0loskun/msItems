@@ -21,9 +21,9 @@ public class GiveCommand {
 		if (args[1].length() > 2) {
 			Player player = Bukkit.getPlayer(args[1]);
 
-			int amount = args.length == 4 && args[3].matches("[0-99]+")
+			int amount = args.length == 4 && args[3].matches("\\d+")
 					? Integer.parseInt(args[3])
-					: args.length == 5 && args[4].matches("[0-99]+")
+					: args.length == 5 && args[4].matches("\\d+")
 					? Integer.parseInt(args[4])
 					: 1;
 			if (player == null) {
@@ -43,7 +43,7 @@ public class GiveCommand {
 				if (
 						customItem instanceof Typed typed
 						&& args.length == 4
-						&& !args[3].matches("[0-99]+")
+						&& !args[3].matches("\\d+")
 				) {
 					for (Typed.Type type : typed.getTypes()) {
 						if (type.getNamespacedKey().getKey().equals(args[3])) {

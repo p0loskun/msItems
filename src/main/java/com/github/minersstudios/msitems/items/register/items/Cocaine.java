@@ -1,9 +1,9 @@
-package com.github.minersstudios.msitems.items.items;
+package com.github.minersstudios.msitems.items.register.items;
 
 import com.github.minersstudios.mscore.utils.ChatUtils;
+import com.github.minersstudios.mscore.utils.MSItemUtils;
 import com.github.minersstudios.msitems.MSItems;
 import com.github.minersstudios.msitems.items.CustomItem;
-import com.google.common.collect.Lists;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -11,18 +11,19 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
 
 public class Cocaine implements CustomItem {
 	private @NotNull NamespacedKey namespacedKey;
 	private @NotNull ItemStack itemStack;
-	private @Nullable List<Recipe> recipes;
-	private boolean showInCraftsMenu;
+	private @Nullable List<Map.Entry<Recipe, Boolean>> recipes;
 
 	public Cocaine() {
 		this.namespacedKey = new NamespacedKey(MSItems.getInstance(), "cocaine");
@@ -41,18 +42,26 @@ public class Cocaine implements CustomItem {
 				"Простой путь",
 				"в мир чудес и тюрьмы"
 		));
+		potionMeta.getPersistentDataContainer().set(
+				MSItemUtils.CUSTOM_ITEM_TYPE_NAMESPACED_KEY,
+				PersistentDataType.STRING,
+				this.getNamespacedKey().getKey()
+		);
 		this.itemStack.setItemMeta(potionMeta);
+	}
+
+	@Override
+	public @NotNull List<Map.Entry<Recipe, Boolean>> initRecipes() {
 		ShapedRecipe shapedRecipe = new ShapedRecipe(this.namespacedKey, this.itemStack)
 				.shape(
 						"NNN",
 						"FSF",
 						"LFL"
-				).setIngredient('N', Material.IRON_NUGGET)
+				).setIngredient('N', Material.IRON_INGOT)
 				.setIngredient('F', Material.FERN)
 				.setIngredient('S', Material.SUGAR_CANE)
 				.setIngredient('L', Material.OAK_LEAVES);
-		this.recipes = Lists.newArrayList(shapedRecipe);
-		this.showInCraftsMenu = true;
+		return this.recipes = List.of(Map.entry(shapedRecipe, true));
 	}
 
 	@Override
@@ -76,23 +85,13 @@ public class Cocaine implements CustomItem {
 	}
 
 	@Override
-	public @Nullable List<Recipe> getRecipes() {
+	public @Nullable List<Map.Entry<Recipe, Boolean>> getRecipes() {
 		return this.recipes;
 	}
 
 	@Override
-	public void setRecipes(@Nullable List<Recipe> recipes) {
+	public void setRecipes(@Nullable List<Map.Entry<Recipe, Boolean>> recipes) {
 		this.recipes = recipes;
-	}
-
-	@Override
-	public boolean isShowInCraftsMenu() {
-		return this.showInCraftsMenu;
-	}
-
-	@Override
-	public void setShowInCraftsMenu(boolean showInCraftsMenu) {
-		this.showInCraftsMenu = showInCraftsMenu;
 	}
 
 	@Override

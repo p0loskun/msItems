@@ -1,6 +1,7 @@
-package com.github.minersstudios.msitems.items.items.cards;
+package com.github.minersstudios.msitems.items.register.items.cards;
 
 import com.github.minersstudios.mscore.utils.ChatUtils;
+import com.github.minersstudios.mscore.utils.MSItemUtils;
 import com.github.minersstudios.msitems.MSItems;
 import com.github.minersstudios.msitems.items.CustomItem;
 import com.github.minersstudios.msitems.items.Typed;
@@ -15,18 +16,19 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.BundleMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 @SuppressWarnings("UnstableApiUsage")
 public class CardsBicycle implements Typed {
 	private @NotNull NamespacedKey namespacedKey;
 	private @NotNull ItemStack itemStack;
-	private @Nullable List<Recipe> recipes;
-	private boolean showInCraftsMenu;
+	private @Nullable List<Map.Entry<Recipe, Boolean>> recipes;
 
 	public static final List<ItemStack> BLUE_CARD_ITEMS = Lists.newArrayList(
 			//<editor-fold desc="Blue cards">
@@ -149,6 +151,11 @@ public class CardsBicycle implements Typed {
 	public CardsBicycle() {
 		this.namespacedKey = new NamespacedKey(MSItems.getInstance(), "card_box_bicycle");
 		this.itemStack = Boxes.BOX_BLUE_1.getItemStack();
+
+	}
+
+	@Override
+	public @NotNull List<Map.Entry<Recipe, Boolean>> initRecipes() {
 		//<editor-fold desc="Recipes">
 		ShapedRecipe blue1 = new ShapedRecipe(new NamespacedKey(MSItems.getInstance(), "card_box_bicycle_blue_1"), Boxes.BOX_BLUE_1.getItemStack())
 				.shape(
@@ -185,8 +192,12 @@ public class CardsBicycle implements Typed {
 				.setIngredient('P', Material.PAPER)
 				.setIngredient('I', Material.IRON_INGOT);
 		//</editor-fold>
-		this.recipes = Lists.newArrayList(blue1, blue2, red1, red2);
-		this.showInCraftsMenu = true;
+		return this.recipes = List.of(
+				Map.entry(blue1, true),
+				Map.entry(blue2, true),
+				Map.entry(red1, true),
+				Map.entry(red2, true)
+		);
 	}
 
 	@Override
@@ -210,23 +221,13 @@ public class CardsBicycle implements Typed {
 	}
 
 	@Override
-	public @Nullable List<Recipe> getRecipes() {
+	public @Nullable List<Map.Entry<Recipe, Boolean>> getRecipes() {
 		return this.recipes;
 	}
 
 	@Override
-	public void setRecipes(@Nullable List<Recipe> recipes) {
+	public void setRecipes(@Nullable List<Map.Entry<Recipe, Boolean>> recipes) {
 		this.recipes = recipes;
-	}
-
-	@Override
-	public boolean isShowInCraftsMenu() {
-		return this.showInCraftsMenu;
-	}
-
-	@Override
-	public void setShowInCraftsMenu(boolean showInCraftsMenu) {
-		this.showInCraftsMenu = showInCraftsMenu;
 	}
 
 	@Override
@@ -248,6 +249,11 @@ public class CardsBicycle implements Typed {
 		itemMeta.displayName(ChatUtils.createDefaultStyledText(name));
 		itemMeta.setCustomModelData(customModelData);
 		itemMeta.lore(ChatUtils.convertStringsToComponents(ChatUtils.COLORLESS_DEFAULT_STYLE.color(NamedTextColor.GRAY), lore));
+		itemMeta.getPersistentDataContainer().set(
+				MSItemUtils.CUSTOM_ITEM_TYPE_NAMESPACED_KEY,
+				PersistentDataType.STRING,
+				"card_bicycle"
+		);
 		itemStack.setItemMeta(itemMeta);
 		return itemStack;
 	}
@@ -311,6 +317,11 @@ public class CardsBicycle implements Typed {
 			bundleMeta.displayName(itemName);
 			bundleMeta.setCustomModelData(customModelData);
 			bundleMeta.setItems(cardItems);
+			bundleMeta.getPersistentDataContainer().set(
+					MSItemUtils.CUSTOM_ITEM_TYPE_NAMESPACED_KEY,
+					PersistentDataType.STRING,
+					this.getNamespacedKey().getKey()
+			);
 			this.itemStack.setItemMeta(bundleMeta);
 		}
 

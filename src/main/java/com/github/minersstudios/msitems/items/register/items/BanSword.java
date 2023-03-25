@@ -1,6 +1,7 @@
-package com.github.minersstudios.msitems.items.items;
+package com.github.minersstudios.msitems.items.register.items;
 
 import com.github.minersstudios.mscore.utils.ChatUtils;
+import com.github.minersstudios.mscore.utils.MSItemUtils;
 import com.github.minersstudios.msitems.MSItems;
 import com.github.minersstudios.msitems.items.CustomItem;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -13,6 +14,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -32,7 +34,7 @@ public class BanSword implements CustomItem {
 				"Лишь в руках избранного",
 				"он раскрывает свой потенциал"
 		));
-		itemMeta.setCustomModelData(12000);
+		itemMeta.setCustomModelData(20);
 		itemMeta.setUnbreakable(true);
 		itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 		itemMeta.addEnchant(Enchantment.DAMAGE_ALL, 1, true);
@@ -43,6 +45,11 @@ public class BanSword implements CustomItem {
 		itemMeta.addAttributeModifier(
 				Attribute.GENERIC_LUCK,
 				new AttributeModifier(UUID.randomUUID(), "luck", Double.POSITIVE_INFINITY, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND)
+		);
+		itemMeta.getPersistentDataContainer().set(
+				MSItemUtils.CUSTOM_ITEM_TYPE_NAMESPACED_KEY,
+				PersistentDataType.STRING,
+				this.getNamespacedKey().getKey()
 		);
 		this.itemStack.setItemMeta(itemMeta);
 	}

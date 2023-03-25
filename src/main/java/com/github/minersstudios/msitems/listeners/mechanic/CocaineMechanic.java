@@ -1,9 +1,9 @@
 package com.github.minersstudios.msitems.listeners.mechanic;
 
 import com.github.minersstudios.mscore.MSListener;
+import com.github.minersstudios.mscore.utils.MSItemUtils;
 import com.github.minersstudios.msitems.MSItems;
-import com.github.minersstudios.msitems.items.items.Cocaine;
-import com.github.minersstudios.msitems.utils.CustomItemUtils;
+import com.github.minersstudios.msitems.items.register.items.Cocaine;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,7 +20,7 @@ public class CocaineMechanic implements Listener {
 		ItemStack itemStack = event.getItem();
 		if (
 				!(itemStack.getItemMeta() instanceof PotionMeta)
-				|| !(CustomItemUtils.getCustomItem(itemStack) instanceof Cocaine)
+				|| !(MSItemUtils.getCustomItem(itemStack) instanceof Cocaine)
 		) return;
 		Bukkit.getScheduler().runTaskAsynchronously(MSItems.getInstance(),
 				() -> event.getPlayer().getInventory().getItem(event.getHand()).setAmount(0)

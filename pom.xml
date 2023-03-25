@@ -82,9 +82,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.github.MinersStudios</groupId>
+			<groupId>com.github.MinersStudios.msCore</groupId>
 			<artifactId>msCore</artifactId>
-			<version>release-ad80609c64-1</version>
+			<version>release-7d98756250-1</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

@@ -1,9 +1,11 @@
 package com.github.minersstudios.msitems.items;
 
+import com.github.minersstudios.mscore.utils.MSItemUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,6 +40,11 @@ public interface Typed extends CustomItem {
 		itemMeta.setCustomModelData(type.getCustomModelData());
 		itemMeta.displayName(type.getItemName());
 		itemMeta.lore(type.getLore());
+		itemMeta.getPersistentDataContainer().set(
+				MSItemUtils.CUSTOM_ITEM_TYPE_NAMESPACED_KEY,
+				PersistentDataType.STRING,
+				type.getNamespacedKey().getKey()
+		);
 		itemStack.setItemMeta(itemMeta);
 		return itemStack;
 	}

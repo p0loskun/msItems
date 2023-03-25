@@ -1,33 +1,44 @@
-package com.github.minersstudios.msitems.items.items;
+package com.github.minersstudios.msitems.items.register.items;
 
 import com.github.minersstudios.mscore.MSCore;
 import com.github.minersstudios.mscore.utils.ChatUtils;
+import com.github.minersstudios.mscore.utils.ItemUtils;
+import com.github.minersstudios.mscore.utils.MSItemUtils;
 import com.github.minersstudios.msitems.MSItems;
 import com.github.minersstudios.msitems.items.CustomItem;
-import com.google.common.collect.Lists;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
-public class Plumbum implements CustomItem {
+public class PlumbumIngot implements CustomItem {
 	private @NotNull NamespacedKey namespacedKey;
 	private @NotNull ItemStack itemStack;
-	private @Nullable List<Recipe> recipes;
-	private boolean showInCraftsMenu;
+	private @Nullable List<Map.Entry<Recipe, Boolean>> recipes;
 
-	public Plumbum() {
+	public PlumbumIngot() {
 		this.namespacedKey = new NamespacedKey(MSItems.getInstance(), "plumbum_ingot");
 		this.itemStack = new ItemStack(Material.PAPER);
 		ItemMeta itemMeta = this.itemStack.getItemMeta();
 		itemMeta.displayName(ChatUtils.createDefaultStyledText("Свинцовый слиток"));
 		itemMeta.setCustomModelData(12000);
+		itemMeta.getPersistentDataContainer().set(
+				MSItemUtils.CUSTOM_ITEM_TYPE_NAMESPACED_KEY,
+				PersistentDataType.STRING,
+				this.getNamespacedKey().getKey()
+		);
 		this.itemStack.setItemMeta(itemMeta);
+	}
+
+	@Override
+	public @NotNull List<Map.Entry<Recipe, Boolean>> initRecipes() {
 		ItemStack input = Objects.requireNonNull(MSCore.getConfigCache().customItemMap.getByPrimaryKey("raw_plumbum")).getItemStack();
 		FurnaceRecipe furnaceRecipe = new FurnaceRecipe(
 				new NamespacedKey(MSItems.getInstance(), "plumbum_ingot_furnace"),
@@ -43,8 +54,21 @@ public class Plumbum implements CustomItem {
 				0.7f,
 				100
 		);
-		this.recipes = Lists.newArrayList(furnaceRecipe, blastingRecipe);
-		this.showInCraftsMenu = false;
+		ItemStack plumbumBlock = ItemUtils.getMSItemStack("msblock:plumbum_block");
+		if (plumbumBlock != null) {
+			ShapedRecipe blockShapedRecipe = new ShapedRecipe(new NamespacedKey(MSItems.getInstance(), "plumbum_ingot_from_block"), this.itemStack.clone().add(8))
+					.shape("I")
+					.setIngredient('I', new RecipeChoice.ExactChoice(plumbumBlock));
+			return this.recipes = List.of(
+					Map.entry(furnaceRecipe, false),
+					Map.entry(blastingRecipe, false),
+					Map.entry(blockShapedRecipe, true)
+			);
+		}
+		return this.recipes = List.of(
+				Map.entry(furnaceRecipe, false),
+				Map.entry(blastingRecipe, false)
+		);
 	}
 
 	@Override
@@ -68,23 +92,13 @@ public class Plumbum implements CustomItem {
 	}
 
 	@Override
-	public @Nullable List<Recipe> getRecipes() {
+	public @Nullable List<Map.Entry<Recipe, Boolean>> getRecipes() {
 		return this.recipes;
 	}
 
 	@Override
-	public void setRecipes(@Nullable List<Recipe> recipes) {
+	public void setRecipes(@Nullable List<Map.Entry<Recipe, Boolean>> recipes) {
 		this.recipes = recipes;
-	}
-
-	@Override
-	public boolean isShowInCraftsMenu() {
-		return this.showInCraftsMenu;
-	}
-
-	@Override
-	public void setShowInCraftsMenu(boolean showInCraftsMenu) {
-		this.showInCraftsMenu = showInCraftsMenu;
 	}
 
 	@Override

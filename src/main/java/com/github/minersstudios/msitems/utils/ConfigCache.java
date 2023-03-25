@@ -2,14 +2,21 @@ package com.github.minersstudios.msitems.utils;
 
 import com.github.minersstudios.mscore.MSCore;
 import com.github.minersstudios.msitems.MSItems;
+import com.github.minersstudios.msitems.items.CustomItem;
 import com.github.minersstudios.msitems.items.RenameableItem;
-import com.github.minersstudios.msitems.items.cosmetics.LeatherHat;
-import com.github.minersstudios.msitems.items.items.*;
-import com.github.minersstudios.msitems.items.items.cards.CardsBicycle;
+import com.github.minersstudios.msitems.items.register.cosmetics.LeatherHat;
+import com.github.minersstudios.msitems.items.register.items.*;
+import com.github.minersstudios.msitems.items.register.items.armor.hazmat.HazmatBoots;
+import com.github.minersstudios.msitems.items.register.items.armor.hazmat.HazmatChestplate;
+import com.github.minersstudios.msitems.items.register.items.armor.hazmat.HazmatHelmet;
+import com.github.minersstudios.msitems.items.register.items.armor.hazmat.HazmatLeggings;
+import com.github.minersstudios.msitems.items.register.items.cards.CardsBicycle;
 import net.kyori.adventure.text.Component;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -18,12 +25,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Stream;
 
 public final class ConfigCache {
+	public final List<CustomItem> recipeItems = new ArrayList<>();
 
 	public ConfigCache() {
 		try (Stream<Path> path = Files.walk(Paths.get(MSItems.getInstance().getPluginFolder() + "/items"))) {
@@ -57,12 +63,19 @@ public final class ConfigCache {
 						}
 						itemMeta.setCustomModelData(renameableItemConfig.getInt("custom-model-data"));
 						resultItemStack.setItemMeta(itemMeta);
+
+						Set<OfflinePlayer> offlinePlayers = new HashSet<>();
+						for (String uuid : renameableItemConfig.getStringList("whitelist")) {
+							offlinePlayers.add(Bukkit.getOfflinePlayer(UUID.fromString(uuid)));
+						}
+
 						RenameableItem renameableItem = new RenameableItem(
 								new NamespacedKey(MSItems.getInstance(), Objects.requireNonNull(renameableItemConfig.getString("namespaced-key"), fileName + " namespaced-key must be NotNull!")),
 								Objects.requireNonNull(renameableItemConfig.getString("rename-text"), fileName + " rename-text must be NotNull!"),
 								renameableItemStacks,
 								resultItemStack,
-								renameableItemConfig.getBoolean("show-in-rename-menu")
+								renameableItemConfig.getBoolean("show-in-rename-menu"),
+								offlinePlayers
 						);
 						MSCore.getConfigCache().renameableItemMap.put(renameableItem.getNamespacedKey().getKey(), itemMeta.getCustomModelData(), renameableItem);
 					});
@@ -71,10 +84,15 @@ public final class ConfigCache {
 		}
 	}
 
-	public static void registerItems() {
+	public void registerItems() {
 		new LeatherHat().register();
 		new RawPlumbum().register();
-		new Plumbum().register();
+		new PlumbumIngot().register();
+		new AntiRadiationTextile().register();
+		new HazmatHelmet().register();
+		new HazmatChestplate().register();
+		new HazmatLeggings().register();
+		new HazmatBoots().register();
 		new BanSword().register();
 		new Wrench().register();
 		new CardsBicycle().register();

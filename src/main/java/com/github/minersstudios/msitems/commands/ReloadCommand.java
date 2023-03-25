@@ -1,17 +1,19 @@
 package com.github.minersstudios.msitems.commands;
 
-import com.github.minersstudios.mscore.MSCore;
 import com.github.minersstudios.mscore.utils.ChatUtils;
 import com.github.minersstudios.msitems.MSItems;
 import com.github.minersstudios.msitems.items.RenameableItem;
+import net.kyori.adventure.key.Keyed;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.ShapedRecipe;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
+
+import static com.github.minersstudios.mscore.MSCore.getConfigCache;
 
 public class ReloadCommand {
 
@@ -20,16 +22,16 @@ public class ReloadCommand {
 		Iterator<Recipe> crafts = Bukkit.recipeIterator();
 		while (crafts.hasNext()) {
 			Recipe recipe = crafts.next();
-			if (recipe instanceof ShapedRecipe shapedRecipe && shapedRecipe.getKey().getNamespace().equals("msitems")) {
-				Bukkit.removeRecipe(shapedRecipe.getKey());
+			if (recipe instanceof Keyed keyed && keyed.key().namespace().equals("msitems")) {
+				Bukkit.removeRecipe(new NamespacedKey(MSItems.getInstance(), keyed.key().value()));
 			}
 		}
-		MSCore.getConfigCache().customItemMap.clear();
-		MSCore.getConfigCache().renameableItemMap.clear();
-		MSCore.getConfigCache().renameableItemsMenu.clear();
-		MSCore.getConfigCache().customItemRecipes.clear();
+		getConfigCache().customItemMap.clear();
+		getConfigCache().customItemRecipes.clear();
+		getConfigCache().renameableItemMap.clear();
+		getConfigCache().renameableItemsMenu.clear();
 		MSItems.reloadConfigs();
-		RenameableItem.Menu.values = MSCore.getConfigCache().renameableItemsMenu.toArray(new RenameableItem[0]);
+		RenameableItem.Menu.values = getConfigCache().renameableItemsMenu.toArray(new RenameableItem[0]);
 		if (MSItems.getInstance().isEnabled()) {
 			return ChatUtils.sendFine(sender, Component.text("Плагин был успешно перезагружён за " + (System.currentTimeMillis() - time) + "ms"));
 		}

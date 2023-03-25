@@ -1,9 +1,11 @@
 package com.github.minersstudios.msitems.items;
 
 import com.github.minersstudios.mscore.utils.ChatUtils;
+import com.github.minersstudios.mscore.utils.MSItemUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -43,6 +45,11 @@ public interface Renameable extends CustomItem {
 				ItemMeta itemMeta = newItemStack.getItemMeta();
 				itemMeta.setCustomModelData(renameableItem.getCustomModelData());
 				itemMeta.displayName(ChatUtils.createDefaultStyledText(renameText));
+				itemMeta.getPersistentDataContainer().set(
+						MSItemUtils.CUSTOM_ITEM_TYPE_NAMESPACED_KEY,
+						PersistentDataType.STRING,
+						renameableItem.getKey()
+				);
 				if (renameableItem.getLore() != null) {
 					List<Component> loreComponentList = new ArrayList<>();
 					for (String text : renameableItem.getLore()) {

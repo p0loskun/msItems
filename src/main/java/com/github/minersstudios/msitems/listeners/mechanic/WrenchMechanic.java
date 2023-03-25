@@ -1,13 +1,15 @@
 package com.github.minersstudios.msitems.listeners.mechanic;
 
 import com.github.minersstudios.mscore.MSListener;
+import com.github.minersstudios.mscore.utils.ChatUtils;
+import com.github.minersstudios.mscore.utils.ItemUtils;
 import com.github.minersstudios.mscore.utils.MSDecorUtils;
+import com.github.minersstudios.mscore.utils.MSItemUtils;
 import com.github.minersstudios.msdecor.customdecor.Sittable;
 import com.github.minersstudios.msdecor.customdecor.Typed;
 import com.github.minersstudios.msdecor.customdecor.Wrenchable;
 import com.github.minersstudios.msdecor.utils.CustomDecorUtils;
-import com.github.minersstudios.msitems.items.items.Wrench;
-import com.github.minersstudios.msitems.utils.CustomItemUtils;
+import com.github.minersstudios.msitems.items.register.items.Wrench;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.ArmorStand;
@@ -22,8 +24,8 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,7 +48,7 @@ public class WrenchMechanic implements Listener {
 		this.location = clickedBlock.getLocation().toCenterLocation();
 		if (
 				event.getHand() == EquipmentSlot.HAND
-				&& CustomItemUtils.getCustomItem(this.itemInMainHand) instanceof Wrench
+				&& MSItemUtils.getCustomItem(this.itemInMainHand) instanceof Wrench
 		) {
 			event.setCancelled(Tag.DIRT.isTagged(clickedBlock.getType()));
 			if (
@@ -79,7 +81,7 @@ public class WrenchMechanic implements Listener {
 		this.location = entity.getLocation();
 		if (
 				event.getHand() == EquipmentSlot.HAND
-				&& CustomItemUtils.getCustomItem(this.itemInMainHand) instanceof Wrench
+				&& MSItemUtils.getCustomItem(this.itemInMainHand) instanceof Wrench
 				&& CustomDecorUtils.getCustomDecorDataByEntity(entity) instanceof Wrenchable wrenchable
 		) {
 			this.use(entity, wrenchable);
@@ -89,27 +91,38 @@ public class WrenchMechanic implements Listener {
 	private void use(@Nullable Entity entity, @NotNull Wrenchable wrenchable) {
 		Typed.Type type = wrenchable.getNextType(wrenchable.getType(wrenchable.getItemStack()));
 		if (type == null) return;
-		int customModelData = wrenchable.createItemStack(type).getItemMeta().getCustomModelData();
+		ItemStack customItem = wrenchable.createItemStack(type);
+
 		if (entity instanceof ItemFrame itemFrame) {
 			ItemStack itemStack = itemFrame.getItem();
 			ItemMeta itemMeta = itemStack.getItemMeta();
-			itemMeta.setCustomModelData(customModelData);
+			itemMeta.setCustomModelData(customItem.getItemMeta().getCustomModelData());
+			itemMeta.getPersistentDataContainer().set(
+					MSDecorUtils.CUSTOM_DECOR_TYPE_NAMESPACED_KEY,
+					PersistentDataType.STRING,
+					type.getNamespacedKey().getKey()
+			);
 			itemStack.setItemMeta(itemMeta);
 			itemFrame.setItem(itemStack);
+			itemFrame.customName(ChatUtils.createDefaultStyledText(type.getItemName()));
 		} else if (entity instanceof ArmorStand armorStand) {
 			ItemStack itemStack = armorStand.getEquipment().getHelmet();
 			ItemMeta itemMeta = itemStack.getItemMeta();
-			itemMeta.setCustomModelData(customModelData);
+			itemMeta.setCustomModelData(customItem.getItemMeta().getCustomModelData());
+			itemMeta.getPersistentDataContainer().set(
+					MSDecorUtils.CUSTOM_DECOR_TYPE_NAMESPACED_KEY,
+					PersistentDataType.STRING,
+					type.getNamespacedKey().getKey()
+			);
+			itemMeta.displayName(ChatUtils.createDefaultStyledText(type.getItemName()));
 			itemStack.setItemMeta(itemMeta);
 			armorStand.getEquipment().setHelmet(itemStack);
 		}
-		if (
-				this.player.getGameMode() == GameMode.SURVIVAL
-				&& this.itemInMainHand.getItemMeta() instanceof Damageable damageable
-		) {
-			damageable.setDamage(damageable.getDamage() + 1);
-			this.itemInMainHand.setItemMeta(damageable);
+
+		if (this.player.getGameMode() == GameMode.SURVIVAL) {
+			ItemUtils.damageItem(this.player, this.itemInMainHand);
 		}
+
 		this.player.swingMainHand();
 		this.player.getWorld().playSound(this.location, Sound.ITEM_SPYGLASS_USE, SoundCategory.PLAYERS, 1.0f, 1.0f);
 	}

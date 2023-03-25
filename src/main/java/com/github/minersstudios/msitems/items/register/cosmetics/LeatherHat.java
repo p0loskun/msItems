@@ -1,12 +1,12 @@
-package com.github.minersstudios.msitems.items.cosmetics;
+package com.github.minersstudios.msitems.items.register.cosmetics;
 
 import com.github.minersstudios.mscore.utils.Badges;
 import com.github.minersstudios.mscore.utils.ChatUtils;
+import com.github.minersstudios.mscore.utils.MSItemUtils;
 import com.github.minersstudios.msitems.MSItems;
 import com.github.minersstudios.msitems.items.CustomItem;
 import com.github.minersstudios.msitems.items.Renameable;
 import com.github.minersstudios.msitems.items.Wearable;
-import com.google.common.collect.Lists;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -16,18 +16,16 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
+import java.util.*;
 
 public class LeatherHat implements Renameable, Wearable {
 	private @NotNull NamespacedKey namespacedKey;
 	private @NotNull ItemStack itemStack;
-	private @Nullable List<Recipe> recipes;
-	private boolean showInCraftsMenu;
+	private @Nullable List<Map.Entry<Recipe, Boolean>> recipes;
 
 	public LeatherHat() {
 		this.namespacedKey = new NamespacedKey(MSItems.getInstance(), "leather_hat");
@@ -36,19 +34,26 @@ public class LeatherHat implements Renameable, Wearable {
 		itemMeta.displayName(ChatUtils.createDefaultStyledText("Кожаная шляпа"));
 		itemMeta.setCustomModelData(999);
 		itemMeta.lore(Badges.PAINTABLE_LORE_COMPONENT);
-
 		itemMeta.addAttributeModifier(
 				Attribute.GENERIC_ARMOR,
 				new AttributeModifier(UUID.randomUUID(), "armor", 1.0f, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HEAD)
 		);
+		itemMeta.getPersistentDataContainer().set(
+				MSItemUtils.CUSTOM_ITEM_TYPE_NAMESPACED_KEY,
+				PersistentDataType.STRING,
+				this.namespacedKey.getKey()
+		);
 		this.itemStack.setItemMeta(itemMeta);
+	}
+
+	@Override
+	public @NotNull List<Map.Entry<Recipe, Boolean>> initRecipes() {
 		ShapedRecipe shapedRecipe = new ShapedRecipe(this.namespacedKey, this.itemStack)
 				.shape(
 						" L ",
 						"LLL"
 				).setIngredient('L', Material.LEATHER);
-		this.recipes = Lists.newArrayList(shapedRecipe);
-		this.showInCraftsMenu = true;
+		return this.recipes = List.of(Map.entry(shapedRecipe, true));
 	}
 
 	@Override
@@ -72,23 +77,13 @@ public class LeatherHat implements Renameable, Wearable {
 	}
 
 	@Override
-	public @Nullable List<Recipe> getRecipes() {
+	public @Nullable List<Map.Entry<Recipe, Boolean>> getRecipes() {
 		return this.recipes;
 	}
 
 	@Override
-	public void setRecipes(@Nullable List<Recipe> recipes) {
+	public void setRecipes(@Nullable List<Map.Entry<Recipe, Boolean>> recipes) {
 		this.recipes = recipes;
-	}
-
-	@Override
-	public boolean isShowInCraftsMenu() {
-		return this.showInCraftsMenu;
-	}
-
-	@Override
-	public void setShowInCraftsMenu(boolean showInCraftsMenu) {
-		this.showInCraftsMenu = showInCraftsMenu;
 	}
 
 	@Override
@@ -166,18 +161,6 @@ public class LeatherHat implements Renameable, Wearable {
 
 		Item(
 				int customModelData,
-				@NotNull String renameText,
-				@Nullable List<String> lore,
-				boolean showInRenameMenu
-		) {
-			this.customModelData = customModelData;
-			this.renameText = renameText;
-			this.lore = lore;
-			this.showInRenameMenu = showInRenameMenu;
-		}
-
-		Item(
-				int customModelData,
 				@NotNull String renameText
 		) {
 			this(customModelData, renameText, null, true);
@@ -189,6 +172,18 @@ public class LeatherHat implements Renameable, Wearable {
 				@Nullable List<String> lore
 		) {
 			this(customModelData, renameText, lore, true);
+		}
+
+		Item(
+				int customModelData,
+				@NotNull String renameText,
+				@Nullable List<String> lore,
+				boolean showInRenameMenu
+		) {
+			this.customModelData = customModelData;
+			this.renameText = renameText;
+			this.lore = lore;
+			this.showInRenameMenu = showInRenameMenu;
 		}
 
 		@Override

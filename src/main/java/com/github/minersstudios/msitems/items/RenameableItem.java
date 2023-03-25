@@ -2,23 +2,24 @@ package com.github.minersstudios.msitems.items;
 
 import com.github.minersstudios.mscore.MSCore;
 import com.github.minersstudios.mscore.utils.ChatUtils;
+import com.github.minersstudios.mscore.utils.MSItemUtils;
 import com.github.minersstudios.msitems.MSItems;
 import com.google.common.collect.Lists;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @SuppressWarnings("unused")
 public class RenameableItem {
@@ -27,13 +28,15 @@ public class RenameableItem {
 	private List<ItemStack> renameableItemStacks;
 	private @NotNull ItemStack resultItemStack;
 	private boolean showInRenameMenu;
+	private final @NotNull Set<OfflinePlayer> whiteList = new HashSet<>();
 
 	public RenameableItem(
 			@NotNull NamespacedKey namespacedKey,
 			@NotNull String renameText,
 			@NotNull List<ItemStack> renameableItemStacks,
 			@NotNull ItemStack resultItemStack,
-			boolean showInRenameMenu
+			boolean showInRenameMenu,
+			@NotNull Set<OfflinePlayer> whiteList
 	) {
 		this.namespacedKey = namespacedKey;
 		this.renameText = renameText;
@@ -42,7 +45,13 @@ public class RenameableItem {
 		this.resultItemStack = resultItemStack;
 		ItemMeta itemMeta = this.resultItemStack.getItemMeta();
 		itemMeta.displayName(ChatUtils.createDefaultStyledText(renameText));
+		itemMeta.getPersistentDataContainer().set(
+				MSItemUtils.CUSTOM_ITEM_RENAMEABLE_NAMESPACED_KEY,
+				PersistentDataType.STRING,
+				this.getNamespacedKey().getKey()
+		);
 		this.resultItemStack.setItemMeta(itemMeta);
+		this.whiteList.addAll(whiteList);
 		if (showInRenameMenu) {
 			MSCore.getConfigCache().renameableItemsMenu.add(this);
 		}
@@ -56,6 +65,11 @@ public class RenameableItem {
 		itemMeta.displayName(ChatUtils.createDefaultStyledText(renameText));
 		itemMeta.lore(this.resultItemStack.lore());
 		itemMeta.setCustomModelData(this.resultItemStack.getItemMeta().getCustomModelData());
+		itemMeta.getPersistentDataContainer().set(
+				MSItemUtils.CUSTOM_ITEM_RENAMEABLE_NAMESPACED_KEY,
+				PersistentDataType.STRING,
+				this.getNamespacedKey().getKey()
+		);
 		newItemStack.setItemMeta(itemMeta);
 		return newItemStack;
 	}
@@ -76,14 +90,6 @@ public class RenameableItem {
 		this.renameText = renameText;
 	}
 
-	public boolean isShowInRenameMenu() {
-		return this.showInRenameMenu;
-	}
-
-	public void setShowInRenameMenu(boolean showInRenameMenu) {
-		this.showInRenameMenu = showInRenameMenu;
-	}
-
 	public @NotNull List<ItemStack> getRenameableItemStacks() {
 		return this.renameableItemStacks;
 	}
@@ -98,6 +104,22 @@ public class RenameableItem {
 
 	public void setResultItemStack(@NotNull ItemStack resultItemStack) {
 		this.resultItemStack = resultItemStack;
+	}
+
+	public boolean isShowInRenameMenu() {
+		return this.showInRenameMenu;
+	}
+
+	public void setShowInRenameMenu(boolean showInRenameMenu) {
+		this.showInRenameMenu = showInRenameMenu;
+	}
+
+	public boolean isWhiteListed(@Nullable OfflinePlayer player) {
+		return this.whiteList.isEmpty() || this.whiteList.contains(player);
+	}
+
+	public @NotNull Set<OfflinePlayer> getWhiteListedPlayers() {
+		return this.whiteList;
 	}
 
 	public static class Menu {
@@ -237,7 +259,7 @@ public class RenameableItem {
 		public static @NotNull ItemStack getRedCross() {
 			ItemStack itemStack = new ItemStack(Material.PAPER);
 			ItemMeta itemMeta = itemStack.getItemMeta();
-			itemMeta.displayName(Component.text(ChatColor.GRAY + "Вам не хватает 1 очка опыта"));
+			itemMeta.displayName(Component.text(ChatColor.GRAY + "Вам не хватает 1 уровня опыта"));
 			itemMeta.setCustomModelData(5003);
 			itemStack.setItemMeta(itemMeta);
 			return itemStack;

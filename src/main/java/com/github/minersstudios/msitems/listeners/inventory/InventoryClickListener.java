@@ -2,16 +2,15 @@ package com.github.minersstudios.msitems.listeners.inventory;
 
 import com.github.minersstudios.mscore.MSListener;
 import com.github.minersstudios.mscore.utils.ChatUtils;
+import com.github.minersstudios.mscore.utils.MSItemUtils;
 import com.github.minersstudios.msitems.MSItems;
 import com.github.minersstudios.msitems.items.Renameable;
 import com.github.minersstudios.msitems.items.RenameableItem;
 import com.github.minersstudios.msitems.items.Wearable;
 import com.github.minersstudios.msitems.utils.CustomItemUtils;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
+import org.bukkit.*;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -47,8 +46,12 @@ public class InventoryClickListener implements Listener {
 				&& event.getSlotType() == InventoryType.SlotType.ARMOR
 				&& cursorItem != null
 				&& !cursorItem.getType().isAir()
-				&& CustomItemUtils.getCustomItem(cursorItem) instanceof Wearable
+				&& MSItemUtils.getCustomItem(cursorItem) instanceof Wearable
 		) {
+			if (
+					currentItem != null
+					&& currentItem.getEnchantments().containsKey(Enchantment.BINDING_CURSE)
+			) return;
 			Bukkit.getScheduler().runTask(MSItems.getInstance(), () -> {
 				inventory.setHelmet(cursorItem);
 				player.setItemOnCursor(currentItem);
@@ -62,7 +65,7 @@ public class InventoryClickListener implements Listener {
 				&& clickedInventory.getType() == InventoryType.PLAYER
 				&& player.getOpenInventory().getType() == InventoryType.CRAFTING
 				&& inventory.getHelmet() == null
-				&& CustomItemUtils.getCustomItem(currentItem) instanceof Wearable
+				&& MSItemUtils.getCustomItem(currentItem) instanceof Wearable
 		) {
 			event.setCancelled(true);
 			Bukkit.getScheduler().runTask(MSItems.getInstance(), () -> {
@@ -135,7 +138,7 @@ public class InventoryClickListener implements Listener {
 	}
 
 	private void craftRenamedItem(ItemStack itemStack, Inventory inventory, String renameText, boolean hasExp) {
-		if (CustomItemUtils.getCustomItem(itemStack) instanceof Renameable renameable) {
+		if (MSItemUtils.getCustomItem(itemStack) instanceof Renameable renameable) {
 			inventory.setItem(currentRenamedItemSlot, renameable.createRenamedItem(itemStack, renameText));
 			if (!hasExp) {
 				inventory.setItem(redCrossSlot, getRedCross());
@@ -143,7 +146,10 @@ public class InventoryClickListener implements Listener {
 			return;
 		} else {
 			RenameableItem renameableItem = CustomItemUtils.getRenameableItem(itemStack, renameText);
-			if (renameableItem != null) {
+			if (
+					renameableItem != null
+					&& renameableItem.isWhiteListed((OfflinePlayer) inventory.getViewers().get(0))
+			) {
 				inventory.setItem(currentRenamedItemSlot, renameableItem.createRenamedItem(itemStack, renameText));
 				if (!hasExp) {
 					inventory.setItem(redCrossSlot, getRedCross());
