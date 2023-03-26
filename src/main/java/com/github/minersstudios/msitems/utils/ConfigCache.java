@@ -18,20 +18,38 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
 public final class ConfigCache {
+	public final @NotNull File configFile;
+	public final @NotNull YamlConfiguration configYaml;
+
+	public final long dosimeterCheckRate;
+
 	public final List<CustomItem> recipeItems = new ArrayList<>();
+	public final Map<Player, EquipmentSlot> dosimeterPlayers = new ConcurrentHashMap<>();
+	public final List<BukkitTask> bukkitTasks = new ArrayList<>();
 
 	public ConfigCache() {
+		this.configFile = MSItems.getInstance().getConfigFile();
+		this.configYaml = YamlConfiguration.loadConfiguration(this.configFile);
+
+		this.dosimeterCheckRate = this.configYaml.getLong("dosimeter-check-rate");
+
 		try (Stream<Path> path = Files.walk(Paths.get(MSItems.getInstance().getPluginFolder() + "/items"))) {
 			path.filter(Files::isRegularFile)
 					.map(Path::toFile)
@@ -93,6 +111,7 @@ public final class ConfigCache {
 		new HazmatChestplate().register();
 		new HazmatLeggings().register();
 		new HazmatBoots().register();
+		new Dosimeter().register();
 		new BanSword().register();
 		new Wrench().register();
 		new CardsBicycle().register();

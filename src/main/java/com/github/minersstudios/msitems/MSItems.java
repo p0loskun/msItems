@@ -3,8 +3,11 @@ package com.github.minersstudios.msitems;
 import com.github.minersstudios.mscore.MSPlugin;
 import com.github.minersstudios.mscore.utils.MSPluginUtils;
 import com.github.minersstudios.msitems.items.CustomItem;
+import com.github.minersstudios.msitems.listeners.mechanic.DosimeterMechanic;
 import com.github.minersstudios.msitems.utils.ConfigCache;
+import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,9 +26,18 @@ public final class MSItems extends MSPlugin {
         instance.saveResource("items/example.yml", true);
         instance.saveDefaultConfig();
         instance.reloadConfig();
+
+        if (configCache != null) {
+            configCache.bukkitTasks.forEach(BukkitTask::cancel);
+        }
+
         configCache = new ConfigCache();
         configCache.registerItems();
         instance.loadedCustoms = true;
+
+        configCache.bukkitTasks.add(Bukkit.getScheduler().runTaskTimer(instance,
+                () -> new DosimeterMechanic.DosimeterTask().run(), 0L, configCache.dosimeterCheckRate
+        ));
 
         new BukkitRunnable() {
             @Override
