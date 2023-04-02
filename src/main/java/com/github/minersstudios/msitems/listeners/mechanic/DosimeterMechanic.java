@@ -64,11 +64,12 @@ public class DosimeterMechanic implements Listener {
 		EquipmentSlot newEquipmentSlot = equipmentSlot == EquipmentSlot.HAND ? EquipmentSlot.OFF_HAND : EquipmentSlot.HAND;
 
 		if (
-				clickType == ClickType.SWAP_OFFHAND
+				clickType.isShiftClick()
+				|| (clickType == ClickType.SWAP_OFFHAND
 				&& equipmentSlot == EquipmentSlot.OFF_HAND
-				&& event.getSlot() != playerInventory.getHeldItemSlot()
+				&& event.getSlot() != playerInventory.getHeldItemSlot())
 		) {
-			dosimeter.setItemStack(dosimeterItem);
+			dosimeter.setItemStack(clickType.isShiftClick() ? Objects.requireNonNull(event.getCurrentItem()) : dosimeterItem);
 			dosimeter.setEnabled(false);
 			MSItems.getConfigCache().dosimeterPlayers.remove(player);
 			return;
