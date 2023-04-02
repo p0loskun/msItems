@@ -48,6 +48,7 @@ public class Dosimeter implements CustomItem {
 
 	public void setEnabled(boolean enabled) {
 		ItemMeta itemMeta = this.itemStack.getItemMeta();
+		if (itemMeta == null) return;
 		itemMeta.getPersistentDataContainer().set(DOSIMETER, PersistentDataType.BYTE, (byte) (enabled ? 1 : 0));
 		if (!enabled) {
 			itemMeta.setCustomModelData(ScreenType.OFF.customModelData);

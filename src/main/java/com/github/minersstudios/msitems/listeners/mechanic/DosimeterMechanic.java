@@ -12,6 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
@@ -52,22 +53,35 @@ public class DosimeterMechanic implements Listener {
 	public void onInventoryClick(@NotNull InventoryClickEvent event) {
 		Player player = (Player) event.getWhoClicked();
 		Inventory inventory = event.getClickedInventory();
+		ClickType clickType = event.getClick();
 
 		if (!(inventory instanceof PlayerInventory playerInventory)) return;
 		EquipmentSlot equipmentSlot = MSItems.getConfigCache().dosimeterPlayers.get(player);
 		if (equipmentSlot == null) return;
 
 		ItemStack dosimeterItem = playerInventory.getItem(equipmentSlot);
+		if (!(MSItemUtils.getCustomItem(dosimeterItem) instanceof Dosimeter dosimeter)) return;
+		EquipmentSlot newEquipmentSlot = equipmentSlot == EquipmentSlot.HAND ? EquipmentSlot.OFF_HAND : EquipmentSlot.HAND;
+
+		if (
+				clickType == ClickType.SWAP_OFFHAND
+				&& equipmentSlot == EquipmentSlot.OFF_HAND
+				&& event.getSlot() != playerInventory.getHeldItemSlot()
+		) {
+			dosimeter.setItemStack(dosimeterItem);
+			dosimeter.setEnabled(false);
+			MSItems.getConfigCache().dosimeterPlayers.remove(player);
+			return;
+		}
+
 		Bukkit.getScheduler().runTaskAsynchronously(MSItems.getInstance(), () -> {
-			if (!(MSItemUtils.getCustomItem(dosimeterItem) instanceof Dosimeter dosimeter)) return;
-			EquipmentSlot newEquipmentSlot = equipmentSlot == EquipmentSlot.HAND ? EquipmentSlot.OFF_HAND : EquipmentSlot.HAND;
 			if (dosimeterItem.equals(playerInventory.getItem(newEquipmentSlot))) {
 				MSItems.getConfigCache().dosimeterPlayers.put(player, newEquipmentSlot);
 			} else if (
 					!dosimeterItem.equals(playerInventory.getItem(equipmentSlot))
 			) {
 				dosimeter.setItemStack(
-						event.getClick().isKeyboardClick()
+						clickType.isKeyboardClick()
 						? dosimeterItem
 						: Objects.requireNonNull(event.getCursor()));
 				dosimeter.setEnabled(false);
