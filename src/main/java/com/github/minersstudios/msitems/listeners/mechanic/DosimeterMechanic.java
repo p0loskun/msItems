@@ -141,10 +141,10 @@ public class DosimeterMechanic implements Listener {
 		}
 	}
 
-	public static class DosimeterTask implements Runnable {
+	public static class DosimeterTask {
 
-		@Override
-		public void run() {
+		public static void run() {
+			if (MSItems.getConfigCache().dosimeterPlayers.isEmpty()) return;
 			MSItems.getConfigCache().dosimeterPlayers.entrySet()
 			.stream()
 			.filter(entry -> entry.getKey().isOnline())

@@ -6,7 +6,6 @@ import com.github.minersstudios.msitems.MSItems;
 import com.github.minersstudios.msitems.items.CustomItem;
 import com.github.minersstudios.msitems.items.DamageableItem;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -37,7 +36,7 @@ public class Wrench extends DamageableItem implements CustomItem {
 				"С его помощью вы можете",
 				"изменять вид декораций,",
 				"которые помечены как : ",
-				ChatColor.WHITE + "ꀳ"
+				"§fꀳ"
 		));
 		itemMeta.getPersistentDataContainer().set(
 				MSItemUtils.CUSTOM_ITEM_TYPE_NAMESPACED_KEY,

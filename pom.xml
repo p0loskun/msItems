@@ -6,7 +6,7 @@
 
 	<groupId>com.github.minersstudios</groupId>
 	<artifactId>msItems</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<packaging>jar</packaging>
 
 	<name>msItems</name>
@@ -62,29 +62,19 @@
 			<id>papermc</id>
 			<url>https://repo.papermc.io/repository/maven-public/</url>
 		</repository>
-		<repository>
-			<id>spigotmc-repo</id>
-			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-		</repository>
 	</repositories>
 
 	<dependencies>
 		<dependency>
 			<groupId>io.papermc.paper</groupId>
 			<artifactId>paper-api</artifactId>
-			<version>1.19.3-R0.1-SNAPSHOT</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.12.0</version>
+			<version>1.19.4-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.github.MinersStudios.msCore</groupId>
 			<artifactId>msCore</artifactId>
-			<version>release-7d98756250-1</version>
+			<version>release-d683973f21-1</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

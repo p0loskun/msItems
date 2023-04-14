@@ -12,7 +12,6 @@ import com.github.minersstudios.msitems.items.register.items.armor.hazmat.Hazmat
 import com.github.minersstudios.msitems.items.register.items.armor.hazmat.HazmatLeggings;
 import com.github.minersstudios.msitems.items.register.items.cards.CardsBicycle;
 import net.kyori.adventure.text.Component;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -98,7 +97,7 @@ public final class ConfigCache {
 						MSCore.getConfigCache().renameableItemMap.put(renameableItem.getNamespacedKey().getKey(), itemMeta.getCustomModelData(), renameableItem);
 					});
 		} catch (IOException e) {
-			MSItems.getInstance().getLogger().info(ExceptionUtils.getStackTrace(e));
+			Bukkit.getLogger().severe(e.getMessage());
 		}
 	}
 

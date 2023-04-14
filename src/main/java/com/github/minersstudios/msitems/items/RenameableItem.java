@@ -6,7 +6,11 @@ import com.github.minersstudios.mscore.utils.MSItemUtils;
 import com.github.minersstudios.msitems.MSItems;
 import com.google.common.collect.Lists;
 import net.kyori.adventure.text.Component;
-import org.bukkit.*;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -211,8 +215,8 @@ public class RenameableItem {
 			ItemMeta previousPageMeta = previousPage.getItemMeta(),
 					previousPageMetaNoCMD = previousPageNoCMD.getItemMeta();
 			assert previousPageMeta != null && previousPageMetaNoCMD != null;
-			previousPageMetaNoCMD.displayName(Component.text(ChatColor.WHITE + "Предыдущая страница"));
-			previousPageMeta.displayName(Component.text(ChatColor.WHITE + "Предыдущая страница"));
+			previousPageMetaNoCMD.displayName(ChatUtils.createDefaultStyledText("Предыдущая страница"));
+			previousPageMeta.displayName(ChatUtils.createDefaultStyledText("Предыдущая страница"));
 			previousPageMeta.setCustomModelData(5001);
 			previousPageMetaNoCMD.setCustomModelData(1);
 			previousPageNoCMD.setItemMeta(previousPageMetaNoCMD);
@@ -226,8 +230,8 @@ public class RenameableItem {
 					nextPageNoCMD = new ItemStack(Material.PAPER);
 			ItemMeta nextPageMeta = nextPage.getItemMeta(),
 					nextPageMetaNoCMD = nextPageNoCMD.getItemMeta();
-			nextPageMetaNoCMD.displayName(Component.text(ChatColor.WHITE + "Следующая страница"));
-			nextPageMeta.displayName(Component.text(ChatColor.WHITE + "Следующая страница"));
+			nextPageMetaNoCMD.displayName(ChatUtils.createDefaultStyledText("Следующая страница"));
+			nextPageMeta.displayName(ChatUtils.createDefaultStyledText("Следующая страница"));
 			nextPageMeta.setCustomModelData(5002);
 			nextPageMetaNoCMD.setCustomModelData(1);
 			nextPageNoCMD.setItemMeta(nextPageMetaNoCMD);
@@ -239,7 +243,7 @@ public class RenameableItem {
 		private static @NotNull ItemStack getQuitButton() {
 			ItemStack itemStack = new ItemStack(Material.PAPER);
 			ItemMeta itemMeta = itemStack.getItemMeta();
-			itemMeta.displayName(Component.text(ChatColor.WHITE + "Вернуться"));
+			itemMeta.displayName(ChatUtils.createDefaultStyledText("Вернуться"));
 			itemMeta.setCustomModelData(1);
 			itemStack.setItemMeta(itemMeta);
 			return itemStack;
@@ -249,7 +253,7 @@ public class RenameableItem {
 		private static @NotNull ItemStack getArrow(int pageIndex) {
 			ItemStack itemStack = new ItemStack(Material.PAPER);
 			ItemMeta itemMeta = itemStack.getItemMeta();
-			itemMeta.displayName(Component.text(ChatColor.GRAY + " -> "));
+			itemMeta.displayName(Component.text(" -> ", ChatUtils.COLORLESS_DEFAULT_STYLE).color(NamedTextColor.GRAY));
 			itemMeta.setCustomModelData(pageIndex + 1);
 			itemStack.setItemMeta(itemMeta);
 			return itemStack;
@@ -259,7 +263,7 @@ public class RenameableItem {
 		public static @NotNull ItemStack getRedCross() {
 			ItemStack itemStack = new ItemStack(Material.PAPER);
 			ItemMeta itemMeta = itemStack.getItemMeta();
-			itemMeta.displayName(Component.text(ChatColor.GRAY + "Вам не хватает 1 уровня опыта"));
+			itemMeta.displayName(Component.text("Вам не хватает 1 уровня опыта", ChatUtils.COLORLESS_DEFAULT_STYLE).color(NamedTextColor.GRAY));
 			itemMeta.setCustomModelData(5003);
 			itemStack.setItemMeta(itemMeta);
 			return itemStack;

@@ -8,6 +8,7 @@ main: ${mainClass}
 api-version: ${apiVersion}
 softdepend:
   - msCore
+
 commands:
   msitems:
     usage: " ꀑ §cИспользуй: /<command> [параметры]"

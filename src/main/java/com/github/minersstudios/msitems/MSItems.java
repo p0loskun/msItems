@@ -35,9 +35,7 @@ public final class MSItems extends MSPlugin {
         configCache.registerItems();
         instance.loadedCustoms = true;
 
-        configCache.bukkitTasks.add(Bukkit.getScheduler().runTaskTimer(instance,
-                () -> new DosimeterMechanic.DosimeterTask().run(), 0L, configCache.dosimeterCheckRate
-        ));
+        configCache.bukkitTasks.add(Bukkit.getScheduler().runTaskTimer(instance, DosimeterMechanic.DosimeterTask::run, 0L, configCache.dosimeterCheckRate));
 
         new BukkitRunnable() {
             @Override
