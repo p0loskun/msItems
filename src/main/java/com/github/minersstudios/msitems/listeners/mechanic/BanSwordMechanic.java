@@ -5,6 +5,7 @@ import com.github.minersstudios.mscore.utils.MSItemUtils;
 import com.github.minersstudios.msitems.MSItems;
 import com.github.minersstudios.msitems.items.register.items.BanSword;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,22 +18,16 @@ import org.jetbrains.annotations.NotNull;
 @MSListener
 public class BanSwordMechanic implements Listener {
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onEntityDamageByEntity(@NotNull EntityDamageByEntityEvent event) {
 		if (
 				!(event.getDamager() instanceof Player damager)
-				|| !(event.getEntity() instanceof Player damaged)
-				|| !(MSItemUtils.getCustomItem(damager.getActiveItem()) instanceof BanSword)
+				|| !(MSItemUtils.getCustomItem(damager.getInventory().getItemInMainHand()) instanceof BanSword)
 		) return;
-		event.setCancelled(true);
-		if (damager.isOp()) {
-			try {
-				Bukkit.getScheduler().callSyncMethod(MSItems.getInstance(), () ->
-						Bukkit.dispatchCommand(damager, "ban " + damaged + " 9999999 Вы были поражены великим Бан-Мечём")
-				);
-			} catch (Exception exception) {
-				exception.printStackTrace();
-			}
+		Entity damagedEntity = event.getEntity();
+		event.setCancelled(!damager.isOp() || damagedEntity instanceof Player);
+		if (damager.isOp() && damagedEntity instanceof Player damaged) {
+			damager.performCommand("ban " + damaged.getName() + " 1000y Вы были поражены великим Бан-Мечём");
 		}
 	}
 

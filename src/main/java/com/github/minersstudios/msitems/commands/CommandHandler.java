@@ -2,16 +2,29 @@ package com.github.minersstudios.msitems.commands;
 
 import com.github.minersstudios.mscore.MSCommand;
 import com.github.minersstudios.mscore.MSCommandExecutor;
-import com.github.minersstudios.msitems.tabcompleters.TabCommandHandler;
+import com.github.minersstudios.msitems.items.CustomItem;
+import com.github.minersstudios.msitems.items.Typed;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionDefault;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-@MSCommand(command = "msitems")
+import static com.github.minersstudios.mscore.MSCore.getConfigCache;
+
+@MSCommand(
+		command = "msitems",
+		usage = " ꀑ §cИспользуй: /<command> [параметры]",
+		description = "Прочие команды",
+		permission = "msitems.*",
+		permissionDefault = PermissionDefault.OP
+)
 public class CommandHandler implements MSCommandExecutor {
 
 	@Override
@@ -19,7 +32,8 @@ public class CommandHandler implements MSCommandExecutor {
 		if (args.length > 0) {
 			String utilsCommand = args[0].toLowerCase(Locale.ROOT);
 			if ("reload".equalsIgnoreCase(utilsCommand)) {
-				return ReloadCommand.runCommand(sender);
+				ReloadCommand.runCommand(sender);
+				return true;
 			}
 			if ("give".equalsIgnoreCase(utilsCommand)) {
 				return GiveCommand.runCommand(sender, args);
@@ -29,7 +43,34 @@ public class CommandHandler implements MSCommandExecutor {
 	}
 
 	@Override
-	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-		return new TabCommandHandler().onTabComplete(sender, command, label, args);
+	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String @NotNull ... args) {
+		List<String> completions = new ArrayList<>();
+		switch (args.length) {
+			case 1 -> {
+				completions.add("reload");
+				completions.add("give");
+			}
+			case 2 -> {
+				for (Player player : Bukkit.getOnlinePlayers()) {
+					completions.add(player.getName());
+				}
+			}
+			case 3 -> {
+				completions.addAll(getConfigCache().customItemMap.primaryKeySet());
+				completions.addAll(getConfigCache().renameableItemMap.primaryKeySet());
+			}
+			case 4 -> {
+				CustomItem customItem = getConfigCache().customItemMap.getByPrimaryKey(args[2]);
+				if (customItem instanceof Typed typed) {
+					for (Typed.Type type : typed.getTypes()) {
+						completions.add(type.getNamespacedKey().getKey());
+					}
+				}
+			}
+			default -> {
+				return completions;
+			}
+		}
+		return completions;
 	}
 }

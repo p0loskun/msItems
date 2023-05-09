@@ -7,6 +7,7 @@ import com.github.minersstudios.msitems.MSItems;
 import com.github.minersstudios.msitems.items.CustomItem;
 import com.github.minersstudios.msitems.items.Renameable;
 import com.github.minersstudios.msitems.items.Wearable;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -102,8 +103,8 @@ public class LeatherHat implements Renameable, Wearable {
 
 	public enum Item implements Renameable.Item {
 		//<editor-fold desc="Hats">
-		LEATHER_HAT(999, "Кожаная шляпа", Badges.PAINTABLE_LORE),
-		SANTA_HAT(1258, "Колпак санты", Badges.PAINTABLE_LORE),
+		LEATHER_HAT(999, "Кожаная шляпа", Badges.PAINTABLE_LORE_COMPONENT),
+		SANTA_HAT(1258, "Колпак санты", Badges.PAINTABLE_LORE_COMPONENT),
 		GAS_MASK(1369, "Противогаз"),
 		THREED_GLASSES(1211, "3Д Очки"),
 		NECTAR_BEE(1213, "Пчела с пыльцой"),
@@ -111,30 +112,30 @@ public class LeatherHat implements Renameable, Wearable {
 		ANGRY_NECTAR_BEE(1215, "Злая пчела с пыльцой"),
 		ANGRY_BEE(1214, "Злая пчела"),
 		PHANTOM(1216, "Фантом"),
-		BERET(1217, "Берет", Badges.PAINTABLE_LORE),
-		CAP(1218, "Кепка", Badges.PAINTABLE_LORE),
-		CARDBOARD_CROWN(1219, "Корона из картона", Badges.PAINTABLE_LORE),
-		CHEF_HAT(1220, "Колпак шефа", Badges.PAINTABLE_LORE),
-		POVAR_HAT(1221, "Колпак повара", Badges.PAINTABLE_LORE),
+		BERET(1217, "Берет", Badges.PAINTABLE_LORE_COMPONENT),
+		CAP(1218, "Кепка", Badges.PAINTABLE_LORE_COMPONENT),
+		CARDBOARD_CROWN(1219, "Корона из картона", Badges.PAINTABLE_LORE_COMPONENT),
+		CHEF_HAT(1220, "Колпак шефа", Badges.PAINTABLE_LORE_COMPONENT),
+		POVAR_HAT(1221, "Колпак повара", Badges.PAINTABLE_LORE_COMPONENT),
 		ENCHANTER_HAT(1222, "Чародейная шапка"),
 		GOAT_HEAD(1223, "Козья голова"),
 		MEDICINE_MASK(1224, "Медицинская маска"),
-		NEADER_MASK(1225, "Маска неандертальца", Badges.PAINTABLE_LORE),
-		NEADER_MASK_O(1226, "Орущая маска неандертальца", Badges.PAINTABLE_LORE),
-		NEADER_MASK_LEAVES(1227, "Маска с листьями неандертальца", Badges.PAINTABLE_LORE),
-		NEADER_MASK_LEAVES_O(1228, "Орущая маска с листьями неандертальца", Badges.PAINTABLE_LORE),
-		GOLDEN_PROTHESIS_LEFT(1229, "Левый золотой глазной протез", Badges.PAINTABLE_LORE),
-		GOLDEN_PROTHESIS_RIGHT(1230, "Правый золотой глазной протез", Badges.PAINTABLE_LORE),
-		SILVER_PROTHESIS_LEFT(1231, "Левый серебряный глазной протез", Badges.PAINTABLE_LORE),
-		SILVER_PROTHESIS_RIGHT(1232, "Правый серебряный глазной протез", Badges.PAINTABLE_LORE),
+		NEADER_MASK(1225, "Маска неандертальца", Badges.PAINTABLE_LORE_COMPONENT),
+		NEADER_MASK_O(1226, "Орущая маска неандертальца", Badges.PAINTABLE_LORE_COMPONENT),
+		NEADER_MASK_LEAVES(1227, "Маска с листьями неандертальца", Badges.PAINTABLE_LORE_COMPONENT),
+		NEADER_MASK_LEAVES_O(1228, "Орущая маска с листьями неандертальца", Badges.PAINTABLE_LORE_COMPONENT),
+		GOLDEN_PROTHESIS_LEFT(1229, "Левый золотой глазной протез", Badges.PAINTABLE_LORE_COMPONENT),
+		GOLDEN_PROTHESIS_RIGHT(1230, "Правый золотой глазной протез", Badges.PAINTABLE_LORE_COMPONENT),
+		SILVER_PROTHESIS_LEFT(1231, "Левый серебряный глазной протез", Badges.PAINTABLE_LORE_COMPONENT),
+		SILVER_PROTHESIS_RIGHT(1232, "Правый серебряный глазной протез", Badges.PAINTABLE_LORE_COMPONENT),
 		RACOON_HAT(1233, "Шапка из енота"),
 		SAMURAI(1234, "Кабуто"),
 		SAMURAI_MASK(1235, "Маска с кабуто"),
 		SCULK(1236, "Усики вардена"),
-		SUN_HAT(1237, "Соломенная шляпа", Badges.PAINTABLE_LORE),
-		WAITER_CAP(1238, "Официантская шапочка", Badges.PAINTABLE_LORE),
+		SUN_HAT(1237, "Соломенная шляпа", Badges.PAINTABLE_LORE_COMPONENT),
+		WAITER_CAP(1238, "Официантская шапочка", Badges.PAINTABLE_LORE_COMPONENT),
 		WESTERN_HAT(1239, "Ковбойская шляпа"),
-		WOLF_HEAD(1240, "Волчья голова", Badges.PAINTABLE_LORE),
+		WOLF_HEAD(1240, "Волчья голова", Badges.PAINTABLE_LORE_COMPONENT),
 		//<editor-fold desc="Villager hats">
 		ARMORER_HAT(1241, "Очки бронника"),
 		BUTCHER_HAT(1242, "Повязка мясника"),
@@ -154,7 +155,7 @@ public class LeatherHat implements Renameable, Wearable {
 		//</editor-fold>
 		private final int customModelData;
 		@NotNull private final String renameText;
-		@Nullable private final List<String> lore;
+		@Nullable private final List<Component> lore;
 		private final boolean showInRenameMenu;
 
 		private static final Item[] renameableItems = values();
@@ -169,7 +170,7 @@ public class LeatherHat implements Renameable, Wearable {
 		Item(
 				int customModelData,
 				@NotNull String renameText,
-				@Nullable List<String> lore
+				@Nullable List<Component> lore
 		) {
 			this(customModelData, renameText, lore, true);
 		}
@@ -177,7 +178,7 @@ public class LeatherHat implements Renameable, Wearable {
 		Item(
 				int customModelData,
 				@NotNull String renameText,
-				@Nullable List<String> lore,
+				@Nullable List<Component> lore,
 				boolean showInRenameMenu
 		) {
 			this.customModelData = customModelData;
@@ -202,7 +203,7 @@ public class LeatherHat implements Renameable, Wearable {
 		}
 
 		@Override
-		public @Nullable List<String> getLore() {
+		public @Nullable List<Component> getLore() {
 			return this.lore;
 		}
 

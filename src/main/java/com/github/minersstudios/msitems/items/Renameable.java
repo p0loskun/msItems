@@ -11,15 +11,13 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface Renameable extends CustomItem {
 
 	Item @NotNull [] getRenameableItems();
 
-	@NotNull
-	ItemStack getItemStack();
+	@NotNull ItemStack getItemStack();
 
 	@Contract("null -> false")
 	default boolean hasRenameableItem(@Nullable ItemStack itemStack) {
@@ -50,15 +48,7 @@ public interface Renameable extends CustomItem {
 						PersistentDataType.STRING,
 						renameableItem.getKey()
 				);
-				if (renameableItem.getLore() != null) {
-					List<Component> loreComponentList = new ArrayList<>();
-					for (String text : renameableItem.getLore()) {
-						loreComponentList.add(Component.text(text));
-					}
-					itemMeta.lore(loreComponentList);
-				} else {
-					itemMeta.lore(null);
-				}
+				itemMeta.lore(renameableItem.getLore());
 				newItemStack.setItemMeta(itemMeta);
 				return newItemStack;
 			}
@@ -67,16 +57,13 @@ public interface Renameable extends CustomItem {
 	}
 
 	interface Item {
-		@NotNull
-		String getKey();
+		@NotNull String getKey();
 
 		int getCustomModelData();
 
-		@NotNull
-		String getRenameText();
+		@NotNull String getRenameText();
 
-		@Nullable
-		List<String> getLore();
+		@Nullable List<Component> getLore();
 
 		boolean isShowInRenameMenu();
 	}

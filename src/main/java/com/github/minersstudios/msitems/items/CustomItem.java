@@ -54,7 +54,7 @@ public interface CustomItem extends Cloneable {
 		} else if (this instanceof Renameable renameable) {
 			for (Renameable.Item item : renameable.getRenameableItems()) {
 				ItemStack itemStack = renameable.createRenamedItem(renameable.getItemStack(), item.getRenameText());
-				if (itemStack != null && !renameable.getItemStack().isSimilar(itemStack)) {
+				if (itemStack != null) {
 					getConfigCache().customItemMap.put(item.getKey(), item.getCustomModelData(), this);
 					new RenameableItem(
 							new NamespacedKey(MSItems.getInstance(), this.getNamespacedKey().getKey() + "." + item.getKey()),

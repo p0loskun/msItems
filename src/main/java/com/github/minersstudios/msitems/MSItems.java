@@ -1,8 +1,10 @@
 package com.github.minersstudios.msitems;
 
+import com.github.minersstudios.mscore.MSCore;
 import com.github.minersstudios.mscore.MSPlugin;
 import com.github.minersstudios.mscore.utils.MSPluginUtils;
 import com.github.minersstudios.msitems.items.CustomItem;
+import com.github.minersstudios.msitems.items.RenameableItem;
 import com.github.minersstudios.msitems.listeners.mechanic.DosimeterMechanic;
 import com.github.minersstudios.msitems.utils.ConfigCache;
 import org.bukkit.Bukkit;
@@ -34,6 +36,8 @@ public final class MSItems extends MSPlugin {
         configCache = new ConfigCache();
         configCache.registerItems();
         instance.loadedCustoms = true;
+
+        MSCore.getConfigCache().customInventories.put("renames_inventory", RenameableItem.Menu.create());
 
         configCache.bukkitTasks.add(Bukkit.getScheduler().runTaskTimer(instance, DosimeterMechanic.DosimeterTask::run, 0L, configCache.dosimeterCheckRate));
 

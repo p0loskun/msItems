@@ -8,20 +8,3 @@ main: ${mainClass}
 api-version: ${apiVersion}
 softdepend:
   - msCore
-
-commands:
-  msitems:
-    usage: " ꀑ §cИспользуй: /<command> [параметры]"
-    permission: msItems.msitems
-    description: Прочья хуйня
-  renames:
-    usage: " ꀑ §cИспользуй: /<command>"
-    aliases: [ optifine, rename, renameables ]
-    description: Открывает меню с переименованиями предметов
-permissions:
-  msItems.*:
-    default: op
-    children:
-      msItems.msitems: true
-  msItems.msitems:
-    default: op
