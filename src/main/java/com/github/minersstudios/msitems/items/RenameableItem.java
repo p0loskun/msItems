@@ -12,7 +12,6 @@ import com.github.minersstudios.msitems.MSItems;
 import com.github.minersstudios.msitems.utils.CustomItemUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.apache.commons.lang.math.IntRange;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -25,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.stream.IntStream;
 
 import static com.github.minersstudios.mscore.inventory.InventoryButton.playClickSound;
 
@@ -218,7 +218,7 @@ public class RenameableItem {
 				));
 			}
 
-			ElementListedInventory renameInventory = new ElementListedInventory("뀂ꀰ", 5, elements, new IntRange(0, 35).toArray());
+			ElementListedInventory renameInventory = new ElementListedInventory("뀂ꀰ", 5, elements, IntStream.range(0, 36).toArray());
 
 			ButtonClickAction previousClick = (event, customInventory, button) -> {
 				if (!(customInventory instanceof ListedInventory listedInventory)) return;
