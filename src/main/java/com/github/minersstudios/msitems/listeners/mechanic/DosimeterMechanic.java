@@ -1,6 +1,6 @@
 package com.github.minersstudios.msitems.listeners.mechanic;
 
-import com.github.minersstudios.mscore.MSListener;
+import com.github.minersstudios.mscore.listener.MSListener;
 import com.github.minersstudios.mscore.utils.MSItemUtils;
 import com.github.minersstudios.msitems.MSItems;
 import com.github.minersstudios.msitems.items.register.items.Dosimeter;
@@ -189,7 +189,7 @@ public class DosimeterMechanic implements Listener {
 			Collections.reverse(reversedRadii);
 			double indexOfRadius = reversedRadii.indexOf(radius);
 			double afterComma = Math.round(((Math.abs(loc.getX()) + Math.abs(loc.getY()) + Math.abs(loc.getZ())) % 1.0d) * 10.0d) / 10.0d;
-			return (indexOfRadius == -1.0d ? 0.0d : indexOfRadius + 1.0d) + Math.min(afterComma, 0.9d) + "" + Math.min(Math.round(Math.random() * 10.0d), 9);
+			return (indexOfRadius == -1.0d ? 0.0d : indexOfRadius + 1.0d) + Math.min(afterComma, 0.9d) + String.valueOf(Math.min(Math.round(Math.random() * 10.0d), 9));
 		}
 
 		private static @Nullable Map.Entry<Anomaly, Double> getEntryWithMinValue(@NotNull HashMap<Anomaly, Double> map) {

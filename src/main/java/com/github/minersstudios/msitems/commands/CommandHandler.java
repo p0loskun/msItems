@@ -1,9 +1,11 @@
 package com.github.minersstudios.msitems.commands;
 
-import com.github.minersstudios.mscore.MSCommand;
-import com.github.minersstudios.mscore.MSCommandExecutor;
+import com.github.minersstudios.mscore.command.MSCommand;
+import com.github.minersstudios.mscore.command.MSCommandExecutor;
 import com.github.minersstudios.msitems.items.CustomItem;
 import com.github.minersstudios.msitems.items.Typed;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.tree.CommandNode;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -17,6 +19,8 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.github.minersstudios.mscore.MSCore.getConfigCache;
+import static com.mojang.brigadier.builder.LiteralArgumentBuilder.literal;
+import static com.mojang.brigadier.builder.RequiredArgumentBuilder.argument;
 
 @MSCommand(
 		command = "msitems",
@@ -72,5 +76,22 @@ public class CommandHandler implements MSCommandExecutor {
 			}
 		}
 		return completions;
+	}
+
+	@Override
+	public @Nullable CommandNode<?> getCommandNode() {
+		return literal("msitems")
+				.then(literal("reload"))
+				.then(
+						literal("give")
+						.then(
+								argument("nametag", StringArgumentType.word())
+								.then(
+										argument("item id", StringArgumentType.word())
+										.then(argument("type", StringArgumentType.word()))
+								)
+						)
+				)
+				.build();
 	}
 }

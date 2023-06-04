@@ -27,6 +27,7 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 import static com.github.minersstudios.mscore.inventory.InventoryButton.playClickSound;
+import static com.github.minersstudios.mscore.utils.ChatUtils.createDefaultStyledText;
 
 @SuppressWarnings("unused")
 public class RenameableItem {
@@ -51,7 +52,7 @@ public class RenameableItem {
 		this.renameableItemStacks = renameableItemStacks;
 		this.resultItemStack = resultItemStack;
 		ItemMeta itemMeta = this.resultItemStack.getItemMeta();
-		itemMeta.displayName(ChatUtils.createDefaultStyledText(renameText));
+		itemMeta.displayName(createDefaultStyledText(renameText));
 		itemMeta.getPersistentDataContainer().set(
 				MSItemUtils.CUSTOM_ITEM_RENAMEABLE_NAMESPACED_KEY,
 				PersistentDataType.STRING,
@@ -69,7 +70,7 @@ public class RenameableItem {
 		if (renameText == null || itemStack == null) return null;
 		ItemStack newItemStack = itemStack.clone();
 		ItemMeta itemMeta = newItemStack.getItemMeta();
-		itemMeta.displayName(ChatUtils.createDefaultStyledText(renameText));
+		itemMeta.displayName(createDefaultStyledText(renameText));
 		itemMeta.lore(this.resultItemStack.lore());
 		itemMeta.setCustomModelData(this.resultItemStack.getItemMeta().getCustomModelData());
 		itemMeta.getPersistentDataContainer().set(
@@ -144,78 +145,75 @@ public class RenameableItem {
 			List<InventoryButton> elements = new ArrayList<>();
 			for (RenameableItem renameableItem : MSCore.getConfigCache().renameableItemsMenu) {
 				ItemStack resultItem = renameableItem.getResultItemStack();
-				elements.add(new InventoryButton(
-						resultItem,
-						(buttonEvent, inventory, button) -> {
-							Player player = (Player) buttonEvent.getWhoClicked();
-							CustomInventory renameInventory = new CustomInventory("뀃ꀱ", 5);
-							List<ItemStack> renameableItemStacks = renameableItem.getRenameableItemStacks();
-							if (renameableItemStacks.size() == 1) {
-								renameInventory.setItem(renameableItemSlot, renameableItemStacks.get(0));
-							} else {
-								new BukkitRunnable() {
-									int index = 0;
+				elements.add(new InventoryButton(resultItem, (buttonEvent, inventory, button) -> {
+					Player player = (Player) buttonEvent.getWhoClicked();
+					CustomInventory renameInventory = new CustomInventory("뀃ꀱ", 5);
+					List<ItemStack> renameableItemStacks = renameableItem.getRenameableItemStacks();
+					if (renameableItemStacks.size() == 1) {
+						renameInventory.setItem(renameableItemSlot, renameableItemStacks.get(0));
+					} else {
+						new BukkitRunnable() {
+							int index = 0;
 
-									@Override
-									public void run() {
-										if (!buttonEvent.getView().getTopInventory().equals(renameInventory)) this.cancel();
-										renameInventory.setItem(renameableItemSlot, renameableItemStacks.get(this.index));
-										this.index++;
-										if (this.index + 1 > renameableItemStacks.size()) {
-											this.index = 0;
-										}
-									}
-								}.runTaskTimer(MSItems.getInstance(), 0L, 10L);
+							@Override
+							public void run() {
+								if (!buttonEvent.getView().getTopInventory().equals(renameInventory)) this.cancel();
+								renameInventory.setItem(renameableItemSlot, renameableItemStacks.get(this.index));
+								this.index++;
+								if (this.index + 1 > renameableItemStacks.size()) {
+									this.index = 0;
+								}
 							}
-							renameInventory.setItem(renamedItemSlot, resultItem);
-							renameInventory.setButtonAt(quitRenameButtonSlot, new InventoryButton(RenameableItem.Menu.createQuitButton(), (e, i, b) -> {
-								player.openInventory(inventory);
-								playClickSound(player);
-							}));
+						}.runTaskTimer(MSItems.getInstance(), 0L, 10L);
+					}
+					renameInventory.setItem(renamedItemSlot, resultItem);
+					renameInventory.setButtonAt(quitRenameButtonSlot, new InventoryButton(RenameableItem.Menu.createQuitButton(), (e, i, b) -> {
+						player.openInventory(inventory);
+						playClickSound(player);
+					}));
 
-							renameInventory.setCloseAction((e, customInventory) -> {
-								ItemStack itemStack = customInventory.getItem(currentRenameableItemSlot);
-								if (itemStack != null) {
-									Map<Integer, ItemStack> map = player.getInventory().addItem(itemStack);
-									if (!map.isEmpty()) {
-										player.getWorld().dropItemNaturally(player.getLocation().add(0.0d, 0.5d, 0.0d), itemStack);
-									}
-								}
-							});
-
-							renameInventory.setClickAction(((clickEvent, customInventory) -> {
-								int slot = clickEvent.getSlot();
-								ItemStack currentItem = clickEvent.getCurrentItem();
-								ItemStack cursorItem = clickEvent.getCursor();
-								boolean hasExp = player.getLevel() >= 1 || player.getGameMode() == GameMode.CREATIVE;
-
-								if (slot == currentRenameableItemSlot) {
-									ItemStack secondItem = renameInventory.getItem(renamedItemSlot);
-									assert secondItem != null;
-									String renameText = ChatUtils.serializePlainComponent(Objects.requireNonNull(secondItem.getItemMeta().displayName()));
-									Bukkit.getScheduler().runTask(MSItems.getInstance(), () ->
-											createRenamedItem(clickEvent.getCurrentItem(), renameInventory, renameText, hasExp)
-									);
-									return;
-								} else if (
-										slot == currentRenamedItemSlot
-										&& currentItem != null
-										&& renameInventory.getItem(currentRenameableItemSlot) != null
-										&& cursorItem != null
-										&& cursorItem.getType().isAir()
-										&& hasExp
-								) {
-									player.setItemOnCursor(currentItem);
-									renameInventory.setItem(currentRenameableItemSlot, null);
-									renameInventory.setItem(currentRenamedItemSlot, null);
-									player.giveExpLevels(-1);
-								}
-
-								clickEvent.setCancelled(!clickEvent.getClick().isCreativeAction());
-							}));
-							player.openInventory(renameInventory);
+					renameInventory.setCloseAction((e, customInventory) -> {
+						ItemStack itemStack = customInventory.getItem(currentRenameableItemSlot);
+						if (itemStack != null) {
+							Map<Integer, ItemStack> map = player.getInventory().addItem(itemStack);
+							if (!map.isEmpty()) {
+								player.getWorld().dropItemNaturally(player.getLocation().add(0.0d, 0.5d, 0.0d), itemStack);
+							}
 						}
-				));
+					});
+
+					renameInventory.setClickAction(((clickEvent, customInventory) -> {
+						int slot = clickEvent.getSlot();
+						ItemStack currentItem = clickEvent.getCurrentItem();
+						ItemStack cursorItem = clickEvent.getCursor();
+						boolean hasExp = player.getLevel() >= 1 || player.getGameMode() == GameMode.CREATIVE;
+
+						if (slot == currentRenameableItemSlot) {
+							ItemStack secondItem = renameInventory.getItem(renamedItemSlot);
+							assert secondItem != null;
+							String renameText = ChatUtils.serializePlainComponent(Objects.requireNonNull(secondItem.getItemMeta().displayName()));
+							Bukkit.getScheduler().runTask(MSItems.getInstance(), () ->
+									createRenamedItem(clickEvent.getCurrentItem(), renameInventory, renameText, hasExp)
+							);
+							return;
+						} else if (
+								slot == currentRenamedItemSlot
+								&& currentItem != null
+								&& renameInventory.getItem(currentRenameableItemSlot) != null
+								&& cursorItem != null
+								&& cursorItem.getType().isAir()
+								&& hasExp
+						) {
+							player.setItemOnCursor(currentItem);
+							renameInventory.setItem(currentRenameableItemSlot, null);
+							renameInventory.setItem(currentRenamedItemSlot, null);
+							player.giveExpLevels(-1);
+						}
+
+						clickEvent.setCancelled(!clickEvent.getClick().isCreativeAction());
+					}));
+					player.openInventory(renameInventory);
+				}));
 			}
 
 			ElementListedInventory renameInventory = new ElementListedInventory("뀂ꀰ", 5, elements, IntStream.range(0, 36).toArray());
@@ -297,8 +295,8 @@ public class RenameableItem {
 					previousPageNoCMD = new ItemStack(Material.PAPER);
 			ItemMeta previousPageMeta = previousPage.getItemMeta(),
 					previousPageMetaNoCMD = previousPageNoCMD.getItemMeta();
-			previousPageMetaNoCMD.displayName(ChatUtils.createDefaultStyledText("Предыдущая страница"));
-			previousPageMeta.displayName(ChatUtils.createDefaultStyledText("Предыдущая страница"));
+			previousPageMetaNoCMD.displayName(createDefaultStyledText("Предыдущая страница"));
+			previousPageMeta.displayName(createDefaultStyledText("Предыдущая страница"));
 			previousPageMeta.setCustomModelData(5001);
 			previousPageMetaNoCMD.setCustomModelData(1);
 			previousPageNoCMD.setItemMeta(previousPageMetaNoCMD);
@@ -312,8 +310,8 @@ public class RenameableItem {
 					nextPageNoCMD = new ItemStack(Material.PAPER);
 			ItemMeta nextPageMeta = nextPage.getItemMeta(),
 					nextPageMetaNoCMD = nextPageNoCMD.getItemMeta();
-			nextPageMetaNoCMD.displayName(ChatUtils.createDefaultStyledText("Следующая страница"));
-			nextPageMeta.displayName(ChatUtils.createDefaultStyledText("Следующая страница"));
+			nextPageMetaNoCMD.displayName(createDefaultStyledText("Следующая страница"));
+			nextPageMeta.displayName(createDefaultStyledText("Следующая страница"));
 			nextPageMeta.setCustomModelData(5002);
 			nextPageMetaNoCMD.setCustomModelData(1);
 			nextPageNoCMD.setItemMeta(nextPageMetaNoCMD);
@@ -325,7 +323,7 @@ public class RenameableItem {
 		private static @NotNull ItemStack createQuitButton() {
 			ItemStack itemStack = new ItemStack(Material.PAPER);
 			ItemMeta itemMeta = itemStack.getItemMeta();
-			itemMeta.displayName(ChatUtils.createDefaultStyledText("Вернуться"));
+			itemMeta.displayName(createDefaultStyledText("Вернуться"));
 			itemMeta.setCustomModelData(1);
 			itemStack.setItemMeta(itemMeta);
 			return itemStack;

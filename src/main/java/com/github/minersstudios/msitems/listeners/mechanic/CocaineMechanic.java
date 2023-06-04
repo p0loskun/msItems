@@ -1,6 +1,6 @@
 package com.github.minersstudios.msitems.listeners.mechanic;
 
-import com.github.minersstudios.mscore.MSListener;
+import com.github.minersstudios.mscore.listener.MSListener;
 import com.github.minersstudios.mscore.utils.MSItemUtils;
 import com.github.minersstudios.msitems.MSItems;
 import com.github.minersstudios.msitems.items.register.items.Cocaine;
