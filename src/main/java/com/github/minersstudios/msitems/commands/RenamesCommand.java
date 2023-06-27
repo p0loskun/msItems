@@ -1,10 +1,10 @@
 package com.github.minersstudios.msitems.commands;
 
+import com.github.minersstudios.mscore.MSCore;
 import com.github.minersstudios.mscore.command.MSCommand;
 import com.github.minersstudios.mscore.command.MSCommandExecutor;
 import com.github.minersstudios.mscore.inventory.CustomInventory;
 import com.github.minersstudios.mscore.utils.ChatUtils;
-import com.github.minersstudios.mscore.utils.InventoryUtils;
 import com.mojang.brigadier.tree.CommandNode;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.Command;
@@ -30,7 +30,7 @@ public class RenamesCommand implements MSCommandExecutor {
 			ChatUtils.sendError(sender, Component.text("Только игрок может использовать эту команду!"));
 			return true;
 		}
-		CustomInventory inventory = InventoryUtils.getCustomInventory("renames_inventory");
+		CustomInventory inventory = MSCore.getConfigCache().customInventoryMap.get("renames_inventory");
 		if (inventory == null) {
 			ChatUtils.sendError(sender, Component.text("Похоже, что-то пошло не так..."));
 			return true;

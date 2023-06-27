@@ -2,7 +2,7 @@ package com.github.minersstudios.msitems.items.register.items;
 
 import com.github.minersstudios.mscore.MSCore;
 import com.github.minersstudios.mscore.utils.ChatUtils;
-import com.github.minersstudios.mscore.utils.ItemUtils;
+import com.github.minersstudios.mscore.utils.MSBlockUtils;
 import com.github.minersstudios.mscore.utils.MSItemUtils;
 import com.github.minersstudios.msitems.MSItems;
 import com.github.minersstudios.msitems.items.CustomItem;
@@ -54,20 +54,14 @@ public class PlumbumIngot implements CustomItem {
 				0.7f,
 				100
 		);
-		ItemStack plumbumBlock = ItemUtils.getMSItemStack("msblock:plumbum_block");
-		if (plumbumBlock != null) {
-			ShapedRecipe blockShapedRecipe = new ShapedRecipe(new NamespacedKey(MSItems.getInstance(), "plumbum_ingot_from_block"), this.itemStack.clone().add(8))
-					.shape("I")
-					.setIngredient('I', new RecipeChoice.ExactChoice(plumbumBlock));
-			return this.recipes = List.of(
-					Map.entry(furnaceRecipe, false),
-					Map.entry(blastingRecipe, false),
-					Map.entry(blockShapedRecipe, true)
-			);
-		}
+		ItemStack plumbumBlock = MSBlockUtils.getCustomBlockItem("plumbum_block");
+		ShapedRecipe blockShapedRecipe = new ShapedRecipe(new NamespacedKey(MSItems.getInstance(), "plumbum_ingot_from_block"), this.itemStack.clone().add(8))
+				.shape("I")
+				.setIngredient('I', new RecipeChoice.ExactChoice(plumbumBlock));
 		return this.recipes = List.of(
 				Map.entry(furnaceRecipe, false),
-				Map.entry(blastingRecipe, false)
+				Map.entry(blastingRecipe, false),
+				Map.entry(blockShapedRecipe, true)
 		);
 	}
 

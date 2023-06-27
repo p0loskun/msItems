@@ -1,7 +1,7 @@
 package com.github.minersstudios.msitems.items.register.items;
 
 import com.github.minersstudios.mscore.utils.ChatUtils;
-import com.github.minersstudios.mscore.utils.ItemUtils;
+import com.github.minersstudios.mscore.utils.MSBlockUtils;
 import com.github.minersstudios.mscore.utils.MSItemUtils;
 import com.github.minersstudios.msitems.MSItems;
 import com.github.minersstudios.msitems.items.CustomItem;
@@ -47,17 +47,14 @@ public class RawPlumbum implements CustomItem {
 						" I "
 				).setIngredient('I', Material.RAW_IRON)
 				.setIngredient('B', Material.WATER_BUCKET);
-		ItemStack rawPlumbumBlock = ItemUtils.getMSItemStack("msblock:raw_plumbum_block");
-		if (rawPlumbumBlock != null) {
-			ShapedRecipe blockShapedRecipe = new ShapedRecipe(new NamespacedKey(MSItems.getInstance(), "raw_plumbum_from_block"), this.itemStack.clone().add(8))
-					.shape("I")
-					.setIngredient('I', new RecipeChoice.ExactChoice(rawPlumbumBlock));
-			return this.recipes = List.of(
-					Map.entry(shapedRecipe, true),
-					Map.entry(blockShapedRecipe, true)
-			);
-		}
-		return this.recipes = List.of(Map.entry(shapedRecipe, true));
+		ItemStack rawPlumbumBlock = MSBlockUtils.getCustomBlockItem("raw_plumbum_block");
+		ShapedRecipe blockShapedRecipe = new ShapedRecipe(new NamespacedKey(MSItems.getInstance(), "raw_plumbum_from_block"), this.itemStack.clone().add(8))
+				.shape("I")
+				.setIngredient('I', new RecipeChoice.ExactChoice(rawPlumbumBlock));
+		return this.recipes = List.of(
+				Map.entry(shapedRecipe, true),
+				Map.entry(blockShapedRecipe, true)
+		);
 	}
 
 	@Override

@@ -8,7 +8,6 @@ import com.github.minersstudios.msitems.items.RenameableItem;
 import com.github.minersstudios.msitems.listeners.mechanic.DosimeterMechanic;
 import com.github.minersstudios.msitems.utils.ConfigCache;
 import org.bukkit.Bukkit;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -33,26 +32,24 @@ public final class MSItems extends MSPlugin {
             configCache.bukkitTasks.forEach(BukkitTask::cancel);
         }
 
+        long time = System.currentTimeMillis();
         configCache = new ConfigCache();
+        System.out.println(System.currentTimeMillis() - time);
+
         configCache.registerItems();
         instance.loadedCustoms = true;
 
-        MSCore.getConfigCache().customInventories.put("renames_inventory", RenameableItem.Menu.create());
+        MSCore.getConfigCache().customInventoryMap.put("renames_inventory", RenameableItem.Menu.create());
 
         configCache.bukkitTasks.add(Bukkit.getScheduler().runTaskTimer(instance, DosimeterMechanic.DosimeterTask::run, 0L, configCache.dosimeterCheckRate));
 
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (MSPluginUtils.isLoadedCustoms()) {
-                    for (CustomItem customItem : configCache.recipeItems) {
-                        customItem.registerRecipes();
-                    }
-                    configCache.recipeItems.clear();
-                    this.cancel();
-                }
+        Bukkit.getScheduler().runTaskTimer(instance, task -> {
+            if (MSPluginUtils.isLoadedCustoms()) {
+                configCache.recipeItems.forEach(CustomItem::registerRecipes);
+                configCache.recipeItems.clear();
+                task.cancel();
             }
-        }.runTaskTimer(instance, 0L, 50L);
+        }, 0L, 10L);
     }
 
     @Contract(pure = true)

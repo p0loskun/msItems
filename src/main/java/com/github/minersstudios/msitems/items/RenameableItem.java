@@ -145,116 +145,135 @@ public class RenameableItem {
 			List<InventoryButton> elements = new ArrayList<>();
 			for (RenameableItem renameableItem : MSCore.getConfigCache().renameableItemsMenu) {
 				ItemStack resultItem = renameableItem.getResultItemStack();
-				elements.add(new InventoryButton(resultItem, (buttonEvent, inventory, button) -> {
-					Player player = (Player) buttonEvent.getWhoClicked();
-					CustomInventory renameInventory = new CustomInventory("뀃ꀱ", 5);
-					List<ItemStack> renameableItemStacks = renameableItem.getRenameableItemStacks();
-					if (renameableItemStacks.size() == 1) {
-						renameInventory.setItem(renameableItemSlot, renameableItemStacks.get(0));
-					} else {
-						new BukkitRunnable() {
-							int index = 0;
+				elements.add(InventoryButton.create()
+						.item(resultItem)
+						.clickAction((buttonEvent, inventory, button) -> {
+							Player player = (Player) buttonEvent.getWhoClicked();
+							CustomInventory renameInventory = CustomInventory.create("뀃ꀱ", 5);
+							List<ItemStack> renameableItemStacks = renameableItem.getRenameableItemStacks();
+							if (renameableItemStacks.size() == 1) {
+								renameInventory.setItem(renameableItemSlot, renameableItemStacks.get(0));
+							} else {
+								new BukkitRunnable() {
+									int index = 0;
 
-							@Override
-							public void run() {
-								if (!buttonEvent.getView().getTopInventory().equals(renameInventory)) this.cancel();
-								renameInventory.setItem(renameableItemSlot, renameableItemStacks.get(this.index));
-								this.index++;
-								if (this.index + 1 > renameableItemStacks.size()) {
-									this.index = 0;
+									@Override
+									public void run() {
+										if (!buttonEvent.getView().getTopInventory().equals(renameInventory))
+											this.cancel();
+										renameInventory.setItem(renameableItemSlot, renameableItemStacks.get(this.index));
+										this.index++;
+										if (this.index + 1 > renameableItemStacks.size()) {
+											this.index = 0;
+										}
+									}
+								}.runTaskTimer(MSItems.getInstance(), 0L, 10L);
+							}
+
+							renameInventory.setItem(renamedItemSlot, resultItem);
+							renameInventory.buttonAt(quitRenameButtonSlot, InventoryButton.create()
+									.item(RenameableItem.Menu.createQuitButton())
+									.clickAction((e, i, b) -> {
+										player.openInventory(inventory);
+										playClickSound(player);
+									}));
+
+							renameInventory.closeAction((e, customInventory) -> {
+								ItemStack itemStack = customInventory.getItem(currentRenameableItemSlot);
+								if (itemStack != null) {
+									Map<Integer, ItemStack> map = player.getInventory().addItem(itemStack);
+									if (!map.isEmpty()) {
+										player.getWorld().dropItemNaturally(player.getLocation().add(0.0d, 0.5d, 0.0d), itemStack);
+									}
 								}
-							}
-						}.runTaskTimer(MSItems.getInstance(), 0L, 10L);
-					}
-					renameInventory.setItem(renamedItemSlot, resultItem);
-					renameInventory.setButtonAt(quitRenameButtonSlot, new InventoryButton(RenameableItem.Menu.createQuitButton(), (e, i, b) -> {
-						player.openInventory(inventory);
-						playClickSound(player);
-					}));
+							});
 
-					renameInventory.setCloseAction((e, customInventory) -> {
-						ItemStack itemStack = customInventory.getItem(currentRenameableItemSlot);
-						if (itemStack != null) {
-							Map<Integer, ItemStack> map = player.getInventory().addItem(itemStack);
-							if (!map.isEmpty()) {
-								player.getWorld().dropItemNaturally(player.getLocation().add(0.0d, 0.5d, 0.0d), itemStack);
-							}
-						}
-					});
+							renameInventory.clickAction((clickEvent, customInventory) -> {
+								int slot = clickEvent.getSlot();
+								ItemStack currentItem = clickEvent.getCurrentItem();
+								ItemStack cursorItem = clickEvent.getCursor();
+								boolean hasExp = player.getLevel() >= 1 || player.getGameMode() == GameMode.CREATIVE;
 
-					renameInventory.setClickAction(((clickEvent, customInventory) -> {
-						int slot = clickEvent.getSlot();
-						ItemStack currentItem = clickEvent.getCurrentItem();
-						ItemStack cursorItem = clickEvent.getCursor();
-						boolean hasExp = player.getLevel() >= 1 || player.getGameMode() == GameMode.CREATIVE;
+								if (slot == currentRenameableItemSlot) {
+									ItemStack secondItem = renameInventory.getItem(renamedItemSlot);
+									assert secondItem != null;
+									String renameText = ChatUtils.serializePlainComponent(Objects.requireNonNull(secondItem.getItemMeta().displayName()));
+									Bukkit.getScheduler().runTask(MSItems.getInstance(), () ->
+											createRenamedItem(clickEvent.getCurrentItem(), renameInventory, renameText, hasExp)
+									);
+									return;
+								} else if (
+										slot == currentRenamedItemSlot
+										&& currentItem != null
+										&& renameInventory.getItem(currentRenameableItemSlot) != null
+										&& cursorItem != null
+										&& cursorItem.getType().isAir()
+										&& hasExp
+								) {
+									player.setItemOnCursor(currentItem);
+									renameInventory.setItem(currentRenameableItemSlot, null);
+									renameInventory.setItem(currentRenamedItemSlot, null);
+									player.giveExpLevels(-1);
+								}
 
-						if (slot == currentRenameableItemSlot) {
-							ItemStack secondItem = renameInventory.getItem(renamedItemSlot);
-							assert secondItem != null;
-							String renameText = ChatUtils.serializePlainComponent(Objects.requireNonNull(secondItem.getItemMeta().displayName()));
-							Bukkit.getScheduler().runTask(MSItems.getInstance(), () ->
-									createRenamedItem(clickEvent.getCurrentItem(), renameInventory, renameText, hasExp)
-							);
-							return;
-						} else if (
-								slot == currentRenamedItemSlot
-								&& currentItem != null
-								&& renameInventory.getItem(currentRenameableItemSlot) != null
-								&& cursorItem != null
-								&& cursorItem.getType().isAir()
-								&& hasExp
-						) {
-							player.setItemOnCursor(currentItem);
-							renameInventory.setItem(currentRenameableItemSlot, null);
-							renameInventory.setItem(currentRenamedItemSlot, null);
-							player.giveExpLevels(-1);
-						}
-
-						clickEvent.setCancelled(!clickEvent.getClick().isCreativeAction());
-					}));
-					player.openInventory(renameInventory);
-				}));
+								clickEvent.setCancelled(!clickEvent.getClick().isCreativeAction());
+							});
+							player.openInventory(renameInventory);
+						}));
 			}
-
-			ElementListedInventory renameInventory = new ElementListedInventory("뀂ꀰ", 5, elements, IntStream.range(0, 36).toArray());
 
 			ButtonClickAction previousClick = (event, customInventory, button) -> {
 				if (!(customInventory instanceof ListedInventory listedInventory)) return;
 				Player player = (Player) event.getWhoClicked();
-				ListedInventory previousPage = renameInventory.getPage(listedInventory.getPreviousPageIndex());
+				ListedInventory previousPage = listedInventory.getPage(listedInventory.getPreviousPageIndex());
 				if (previousPage != null) {
 					player.openInventory(previousPage);
 					playClickSound(player);
 				}
 			};
-			renameInventory.setStaticButtonAt(36, inventory -> new InventoryButton(createPreviousPageButton()[inventory.getPreviousPageIndex() == -1 ? 1 : 0], previousClick));
-			renameInventory.setStaticButtonAt(37, i -> new InventoryButton(createPreviousPageButton()[1], previousClick));
-			renameInventory.setStaticButtonAt(38, i -> new InventoryButton(createPreviousPageButton()[1], previousClick));
-			renameInventory.setStaticButtonAt(39, i -> new InventoryButton(createPreviousPageButton()[1], previousClick));
 
-			renameInventory.setStaticButtonAt(quitRenamesButtonSlot, i -> new InventoryButton(createQuitButton(), (event, customInventory, inventoryButton) -> {
-				Player player = (Player) event.getWhoClicked();
-				player.closeInventory();
-				playClickSound(player);
-			}));
+			InventoryButton previousPageButton = InventoryButton.create().item(createPreviousPageButton()[1]).clickAction(previousClick);
 
 			ButtonClickAction nextClick = (event, customInventory, button) -> {
 				if (!(customInventory instanceof ListedInventory listedInventory)) return;
 				Player player = (Player) event.getWhoClicked();
-				ListedInventory nextPage = renameInventory.getPage(listedInventory.getNextPageIndex());
+				ListedInventory nextPage = listedInventory.getPage(listedInventory.getNextPageIndex());
 				if (nextPage != null) {
 					player.openInventory(nextPage);
 					playClickSound(player);
 				}
 			};
-			renameInventory.setStaticButtonAt(41, inventory -> new InventoryButton(createNextPageButton()[inventory.getNextPageIndex() == -1 ? 1 : 0], nextClick));
-			renameInventory.setStaticButtonAt(42, i -> new InventoryButton(createNextPageButton()[1], nextClick));
-			renameInventory.setStaticButtonAt(43, i -> new InventoryButton(createNextPageButton()[1], nextClick));
-			renameInventory.setStaticButtonAt(44, i -> new InventoryButton(createNextPageButton()[1], nextClick));
 
-			renameInventory.updatePages();
+			InventoryButton nextButton = InventoryButton.create().item(createNextPageButton()[1]).clickAction(nextClick);
 
-			return renameInventory;
+			return ElementListedInventory.create("뀂ꀰ", 5, IntStream.range(0, 36).toArray())
+					.elements(elements)
+					.staticButtonAt(
+							36,
+							inventory -> InventoryButton.create()
+									.item(createPreviousPageButton()[inventory.getPreviousPageIndex() == -1 ? 1 : 0])
+									.clickAction(previousClick)
+					)
+					.staticButtonAt(37, i -> previousPageButton)
+					.staticButtonAt(38, i -> previousPageButton)
+					.staticButtonAt(39, i -> previousPageButton)
+					.staticButtonAt(quitRenamesButtonSlot, i -> InventoryButton.create()
+							.item(createQuitButton())
+							.clickAction((event, customInventory, inventoryButton) -> {
+								Player player = (Player) event.getWhoClicked();
+								player.closeInventory();
+								playClickSound(player);
+							}))
+					.staticButtonAt(
+							41,
+							inventory -> InventoryButton.create()
+									.item(createNextPageButton()[inventory.getNextPageIndex() == -1 ? 1 : 0])
+									.clickAction(nextClick)
+					)
+					.staticButtonAt(42, i -> nextButton)
+					.staticButtonAt(43, i -> nextButton)
+					.staticButtonAt(44, i -> nextButton)
+					.build();
 		}
 
 		private static void createRenamedItem(

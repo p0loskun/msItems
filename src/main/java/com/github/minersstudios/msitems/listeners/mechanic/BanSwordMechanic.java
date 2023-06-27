@@ -2,9 +2,7 @@ package com.github.minersstudios.msitems.listeners.mechanic;
 
 import com.github.minersstudios.mscore.listener.MSListener;
 import com.github.minersstudios.mscore.utils.MSItemUtils;
-import com.github.minersstudios.msitems.MSItems;
 import com.github.minersstudios.msitems.items.register.items.BanSword;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -37,6 +35,5 @@ public class BanSwordMechanic implements Listener {
 		if (!(MSItemUtils.getCustomItem(currentItem) instanceof BanSword)) return;
 		currentItem.setAmount(0);
 		event.setCancelled(true);
-		Bukkit.getScheduler().runTask(MSItems.getInstance(), ((Player) event.getWhoClicked())::updateInventory);
 	}
 }

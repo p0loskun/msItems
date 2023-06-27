@@ -1,7 +1,6 @@
 package com.github.minersstudios.msitems.items.register.items.armor.hazmat;
 
 import com.github.minersstudios.mscore.utils.ChatUtils;
-import com.github.minersstudios.mscore.utils.ItemUtils;
 import com.github.minersstudios.mscore.utils.MSItemUtils;
 import com.github.minersstudios.msitems.MSItems;
 import com.github.minersstudios.msitems.items.CustomItem;
@@ -53,9 +52,8 @@ public class HazmatBoots extends DamageableItem implements CustomItem {
 
 	@Override
 	public @NotNull List<Map.Entry<Recipe, Boolean>> initRecipes() {
-		ItemStack textile = ItemUtils.getMSItemStack("msitem:anti_radiation_textile");
-		ItemStack plumbumIngot = ItemUtils.getMSItemStack("msitem:plumbum_ingot");
-		assert textile != null && plumbumIngot != null;
+		ItemStack textile = MSItemUtils.getCustomItemItemStack("anti_radiation_textile");
+		ItemStack plumbumIngot = MSItemUtils.getCustomItemItemStack("plumbum_ingot");
 		ShapedRecipe shapedRecipe = new ShapedRecipe(this.namespacedKey, this.itemStack)
 				.shape(
 						"T T",

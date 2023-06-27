@@ -1,7 +1,6 @@
 package com.github.minersstudios.msitems.items.register.items;
 
 import com.github.minersstudios.mscore.utils.ChatUtils;
-import com.github.minersstudios.mscore.utils.ItemUtils;
 import com.github.minersstudios.mscore.utils.MSItemUtils;
 import com.github.minersstudios.msitems.MSItems;
 import com.github.minersstudios.msitems.items.CustomItem;
@@ -85,8 +84,7 @@ public class Dosimeter implements CustomItem {
 
 	@Override
 	public @NotNull List<Map.Entry<Recipe, Boolean>> initRecipes() {
-		ItemStack plumbumIngot = ItemUtils.getMSItemStack("msitem:plumbum_ingot");
-		assert plumbumIngot != null;
+		ItemStack plumbumIngot = MSItemUtils.getCustomItemItemStack("plumbum_ingot");
 		ShapedRecipe shapedRecipe = new ShapedRecipe(this.namespacedKey, this.itemStack)
 				.shape(
 						"III",
