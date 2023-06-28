@@ -149,7 +149,7 @@ public class RenameableItem {
 						.item(resultItem)
 						.clickAction((buttonEvent, inventory, button) -> {
 							Player player = (Player) buttonEvent.getWhoClicked();
-							CustomInventory renameInventory = CustomInventory.create("뀃ꀱ", 5);
+							CustomInventory renameInventory = CustomInventory.create(ChatUtils.createDefaultStyledText("뀃ꀱ"), 5);
 							List<ItemStack> renameableItemStacks = renameableItem.getRenameableItemStacks();
 							if (renameableItemStacks.size() == 1) {
 								renameInventory.setItem(renameableItemSlot, renameableItemStacks.get(0));
@@ -246,7 +246,7 @@ public class RenameableItem {
 
 			InventoryButton nextButton = InventoryButton.create().item(createNextPageButton()[1]).clickAction(nextClick);
 
-			return ElementListedInventory.create("뀂ꀰ", 5, IntStream.range(0, 36).toArray())
+			return ElementListedInventory.create(ChatUtils.createDefaultStyledText("뀂ꀰ"), 5, IntStream.range(0, 36).toArray())
 					.elements(elements)
 					.staticButtonAt(
 							36,
