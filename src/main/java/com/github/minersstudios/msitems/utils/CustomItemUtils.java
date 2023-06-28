@@ -18,7 +18,7 @@ public final class CustomItemUtils {
 				itemStack == null
 				|| renameText == null
 		) return null;
-		for (RenameableItem renameableItem : MSCore.getConfigCache().renameableItemMap.values()) {
+		for (RenameableItem renameableItem : MSCore.getCache().renameableItemMap.values()) {
 			for (ItemStack renameableItemStack : renameableItem.getRenameableItemStacks()) {
 				if (
 						renameableItemStack.getType() == itemStack.getType()

@@ -32,8 +32,8 @@ public class GiveCommand {
 			}
 
 			ItemStack itemStack;
-			RenameableItem renameableItem = MSCore.getConfigCache().renameableItemMap.getByPrimaryKey(args[2]);
-			CustomItem customItem = MSCore.getConfigCache().customItemMap.getByPrimaryKey(args[2]);
+			RenameableItem renameableItem = MSCore.getCache().renameableItemMap.getByPrimaryKey(args[2]);
+			CustomItem customItem = MSCore.getCache().customItemMap.getByPrimaryKey(args[2]);
 			if (customItem == null) {
 				if (renameableItem == null) {
 					ChatUtils.sendError(sender, Component.text("Такого предмета не существует!"));

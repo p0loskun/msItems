@@ -39,7 +39,7 @@ public final class MSItems extends MSPlugin {
         configCache.registerItems();
         instance.loadedCustoms = true;
 
-        MSCore.getConfigCache().customInventoryMap.put("renames_inventory", RenameableItem.Menu.create());
+        MSCore.getCache().customInventoryMap.put("renames_inventory", RenameableItem.Menu.create());
 
         configCache.bukkitTasks.add(Bukkit.getScheduler().runTaskTimer(instance, DosimeterMechanic.DosimeterTask::run, 0L, configCache.dosimeterCheckRate));
 

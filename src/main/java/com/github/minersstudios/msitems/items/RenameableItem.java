@@ -61,7 +61,7 @@ public class RenameableItem {
 		this.resultItemStack.setItemMeta(itemMeta);
 		this.whiteList.addAll(whiteList);
 		if (showInRenameMenu) {
-			MSCore.getConfigCache().renameableItemsMenu.add(this);
+			MSCore.getCache().renameableItemsMenu.add(this);
 		}
 	}
 
@@ -143,7 +143,7 @@ public class RenameableItem {
 		@Contract(" -> new")
 		public static @NotNull CustomInventory create() {
 			List<InventoryButton> elements = new ArrayList<>();
-			for (RenameableItem renameableItem : MSCore.getConfigCache().renameableItemsMenu) {
+			for (RenameableItem renameableItem : MSCore.getCache().renameableItemsMenu) {
 				ItemStack resultItem = renameableItem.getResultItemStack();
 				elements.add(InventoryButton.create()
 						.item(resultItem)

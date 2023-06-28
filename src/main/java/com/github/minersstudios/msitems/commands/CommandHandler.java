@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import static com.github.minersstudios.mscore.MSCore.getConfigCache;
+import static com.github.minersstudios.mscore.MSCore.getCache;
 import static com.mojang.brigadier.builder.LiteralArgumentBuilder.literal;
 import static com.mojang.brigadier.builder.RequiredArgumentBuilder.argument;
 
@@ -61,11 +61,11 @@ public class CommandHandler implements MSCommandExecutor {
 				}
 			}
 			case 3 -> {
-				completions.addAll(getConfigCache().customItemMap.primaryKeySet());
-				completions.addAll(getConfigCache().renameableItemMap.primaryKeySet());
+				completions.addAll(getCache().customItemMap.primaryKeySet());
+				completions.addAll(getCache().renameableItemMap.primaryKeySet());
 			}
 			case 4 -> {
-				CustomItem customItem = getConfigCache().customItemMap.getByPrimaryKey(args[2]);
+				CustomItem customItem = getCache().customItemMap.getByPrimaryKey(args[2]);
 				if (customItem instanceof Typed typed) {
 					for (Typed.Type type : typed.getTypes()) {
 						completions.add(type.getNamespacedKey().getKey());

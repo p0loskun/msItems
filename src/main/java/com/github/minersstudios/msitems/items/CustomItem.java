@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.minersstudios.mscore.MSCore.getConfigCache;
+import static com.github.minersstudios.mscore.MSCore.getCache;
 
 @SuppressWarnings("unused")
 public interface CustomItem extends Cloneable {
@@ -45,7 +45,7 @@ public interface CustomItem extends Cloneable {
 
 		if (this instanceof Typed typed) {
 			for (Typed.Type type : typed.getTypes()) {
-				getConfigCache().customItemMap.put(
+				getCache().customItemMap.put(
 						type.getNamespacedKey().getKey(),
 						type.getCustomModelData(),
 						typed.createCustomItem(type)
@@ -55,7 +55,7 @@ public interface CustomItem extends Cloneable {
 			for (Renameable.Item item : renameable.getRenameableItems()) {
 				ItemStack itemStack = renameable.createRenamedItem(renameable.getItemStack(), item.getRenameText());
 				if (itemStack != null) {
-					getConfigCache().customItemMap.put(item.getKey(), item.getCustomModelData(), this);
+					getCache().customItemMap.put(item.getKey(), item.getCustomModelData(), this);
 					new RenameableItem(
 							new NamespacedKey(MSItems.getInstance(), this.getNamespacedKey().getKey() + "." + item.getKey()),
 							item.getRenameText(),
@@ -67,7 +67,7 @@ public interface CustomItem extends Cloneable {
 				}
 			}
 		} else {
-			getConfigCache().customItemMap.put(
+			getCache().customItemMap.put(
 					this.getNamespacedKey().getKey(),
 					this.getItemStack().getItemMeta().getCustomModelData(),
 					this
@@ -90,7 +90,7 @@ public interface CustomItem extends Cloneable {
 				Recipe recipe = entry.getKey();
 				Bukkit.addRecipe(recipe);
 				if (entry.getValue()) {
-					getConfigCache().customItemRecipes.add(recipe);
+					getCache().customItemRecipes.add(recipe);
 				}
 			}
 		}

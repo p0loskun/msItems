@@ -39,7 +39,7 @@ public class PlumbumIngot implements CustomItem {
 
 	@Override
 	public @NotNull List<Map.Entry<Recipe, Boolean>> initRecipes() {
-		ItemStack input = Objects.requireNonNull(MSCore.getConfigCache().customItemMap.getByPrimaryKey("raw_plumbum")).getItemStack();
+		ItemStack input = Objects.requireNonNull(MSCore.getCache().customItemMap.getByPrimaryKey("raw_plumbum")).getItemStack();
 		FurnaceRecipe furnaceRecipe = new FurnaceRecipe(
 				new NamespacedKey(MSItems.getInstance(), "plumbum_ingot_furnace"),
 				this.itemStack,

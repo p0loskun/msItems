@@ -95,7 +95,7 @@ public final class ConfigCache {
 						renameableItemConfig.getBoolean("show-in-rename-menu"),
 						offlinePlayers
 				);
-				MSCore.getConfigCache().renameableItemMap.put(renameableItem.getNamespacedKey().getKey(), itemMeta.getCustomModelData(), renameableItem);
+				MSCore.getCache().renameableItemMap.put(renameableItem.getNamespacedKey().getKey(), itemMeta.getCustomModelData(), renameableItem);
 			});
 		} catch (IOException e) {
 			Bukkit.getLogger().severe(e.getMessage());

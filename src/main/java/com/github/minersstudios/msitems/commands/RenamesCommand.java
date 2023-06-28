@@ -30,7 +30,7 @@ public class RenamesCommand implements MSCommandExecutor {
 			ChatUtils.sendError(sender, Component.text("Только игрок может использовать эту команду!"));
 			return true;
 		}
-		CustomInventory inventory = MSCore.getConfigCache().customInventoryMap.get("renames_inventory");
+		CustomInventory inventory = MSCore.getCache().customInventoryMap.get("renames_inventory");
 		if (inventory == null) {
 			ChatUtils.sendError(sender, Component.text("Похоже, что-то пошло не так..."));
 			return true;
